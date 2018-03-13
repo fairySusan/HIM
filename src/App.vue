@@ -1,11 +1,15 @@
 <style lang="less">
-
 </style>
 
 <template>
-  <div id="app">
-    <div class="user-info">
-
+  <div>
+    <div class="header">
+      <div class="user-info">
+        <a href="#">
+          <img src="#" alt="用户头像">
+          <span class="userName">用户名</span>
+        </a>
+      </div>
     </div>
     <nav-bar></nav-bar>
     <div class="content">
