@@ -22,9 +22,15 @@
         <!-- 轮播图 -->
         <div class="slider">
             <mt-swipe :auto="4000">
-                <mt-swipe-item>1</mt-swipe-item>
-                <mt-swipe-item>2</mt-swipe-item>
-                <mt-swipe-item>3</mt-swipe-item>
+                <mt-swipe-item>
+                    <a href="#"><img src="" alt=""></a>
+                </mt-swipe-item>
+                <mt-swipe-item>
+                    <a href="#"><img src="" alt=""></a>
+                </mt-swipe-item>
+                <mt-swipe-item>
+                    <a href="#"><img src="" alt=""></a>
+                </mt-swipe-item>
             </mt-swipe>
         </div>
         <!-- 推荐专辑列表 -->
@@ -43,8 +49,20 @@
     </div>
 </template>
 <script>
+    import { getRecommend } from "../../api/recommend";
 export default {
-  
+  create(){
+      this._getRecommend();
+  },
+  methods:{
+      _getRecommend(){
+          getRecommend().then((res => {
+              if(res.code ===  ERR_OK){
+                  console.log(res.data.slider)
+              }
+          }))
+      }
+  }
 }
 </script>
 
