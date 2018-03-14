@@ -22,14 +22,8 @@
         <!-- 轮播图 -->
         <div class="slider">
             <mt-swipe :auto="4000">
-                <mt-swipe-item>
-                    <a href="#"><img src="" alt=""></a>
-                </mt-swipe-item>
-                <mt-swipe-item>
-                    <a href="#"><img src="" alt=""></a>
-                </mt-swipe-item>
-                <mt-swipe-item>
-                    <a href="#"><img src="" alt=""></a>
+                <mt-swipe-item v-for="item in sliderList" :key="item.id">
+                    <a href="#"><img :src="item.picUrl" alt="" width="100%" height="100%"></a>
                 </mt-swipe-item>
             </mt-swipe>
         </div>
@@ -50,19 +44,25 @@
 </template>
 <script>
     import { getRecommend } from "../../api/recommend";
+    import {ERR_OK} from '../../api/config'
 export default {
-  create(){
-      this._getRecommend();
-  },
-  methods:{
-      _getRecommend(){
-          getRecommend().then((res => {
-              if(res.code ===  ERR_OK){
-                  console.log(res.data.slider)
-              }
-          }))
-      }
-  }
+    data(){
+        return{
+            sliderList:[]
+        }
+    },
+    created(){
+        this._getRecommend();
+    },
+    methods:{
+        _getRecommend(){
+            getRecommend().then(res => {
+                if(res.code ===  ERR_OK){
+                    this.sliderList = res.data.slider;
+                }
+            });
+        }
+    }
 }
 </script>
 
