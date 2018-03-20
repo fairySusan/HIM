@@ -3,7 +3,7 @@
  .recommend{
     .slider{
         height: 12rem;
-        background:pink;
+        // background:pink;
     }
     .recommend-special{
         margin-top:10px;
@@ -12,7 +12,12 @@
         }
         .recommend-list{
             height: 5rem;
-            background:@themeColor;
+            border-bottom:1px solid #666;
+            // background:@themeColor;
+            .special-img{
+                margin-right:0.6rem;                
+            }
+            
         } 
     }
  }
@@ -23,19 +28,19 @@
         <div class="slider">
             <mt-swipe :auto="4000">
                 <mt-swipe-item v-for="item in sliderList" :key="item.id">
-                    <a href="#"><img :src="item.picUrl" alt="" width="100%" height="100%"></a>
+                    <a :href="item.linkUrl"><img :src="item.picUrl" alt="" width="100%" height="100%"></a>
                 </mt-swipe-item>
             </mt-swipe>
         </div>
         <!-- 推荐专辑列表 -->
         <div class="recommend-special">
-            <div class="recommend-title">热门歌曲推荐</div>
+            <div class="recommend-title">热门专辑推荐</div>
             <ul>
-                <li class="recommend-list">
-                    <img src="" alt="专辑封面" class="fl">
-                    <div>
-                        <h4>歌曲标题</h4>
-                        <p>简介</p>
+                <li class="recommend-list" v-for="item in songList" :key="item.id">
+                    <img :src="item.picUrl" alt="专辑封面" class="special-img fl" width="15%" height="15%">
+                    <div class="description-text">
+                        <p>{{item.songListDesc}}</p>
+                        <h4>{{item.songListAuthor}}</h4>
                     </div>
                 </li>
             </ul>
@@ -48,7 +53,8 @@
 export default {
     data(){
         return{
-            sliderList:[]
+            sliderList:[],
+            songList:[]
         }
     },
     created(){
@@ -59,6 +65,7 @@ export default {
             getRecommend().then(res => {
                 if(res.code ===  ERR_OK){
                     this.sliderList = res.data.slider;
+                    this.songList   = res.data.songList;
                 }
             });
         }
