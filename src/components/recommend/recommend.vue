@@ -3,7 +3,6 @@
  .recommend{
     .slider{
         height: 12rem;
-        // background:pink;
     }
     .recommend-special{
         margin-top:10px;
@@ -13,17 +12,26 @@
         .recommend-list{
             height: 5rem;
             border-bottom:1px solid #666;
-            // background:@themeColor;
-            .special-img{
-                margin-right:0.6rem;                
+            display:flex;
+            display: -webkit-flex;
+            box-sizing: border-box;
+            align-items:center;
+            .item-img{
+                flex: 0 0 60px;
+                margin:0 0.6rem;                
             }
-            
+            .description-text{
+                display: flex;
+                flex-direction: column;
+                justify-content:center;
+            }
         } 
     }
  }
 </style>
 <template>
     <div class="recommend">
+    <scroll  :data="sliderList">
         <!-- 轮播图 -->
         <div class="slider">
             <mt-swipe :auto="4000">
@@ -37,20 +45,25 @@
             <div class="recommend-title">热门专辑推荐</div>
             <ul>
                 <li class="recommend-list" v-for="item in songList" :key="item.id">
-                    <img :src="item.picUrl" alt="专辑封面" class="special-img fl" width="15%" height="15%">
+                    <div class="item-img">
+                        <img :src="item.picUrl" alt="专辑封面"  width="100%" height="100%">
+                    </div>
                     <div class="description-text">
-                        <p>{{item.songListDesc}}</p>
-                        <h4>{{item.songListAuthor}}</h4>
+                        <p v-html="item.songListDesc"></p>
+                        <h4 v-html="item.songListAuthor"></h4>
                     </div>
                 </li>
             </ul>
         </div>
-    </div>
+    </scroll>
+     </div>
 </template>
 <script>
-    import { getRecommend } from "../../api/recommend";
-    import {ERR_OK} from '../../api/config'
+    import { getRecommend } from "api/recommend";
+    import {ERR_OK} from 'api/config';
+    import Scroll from 'base/scroll'
 export default {
+    components:{Scroll},
     data(){
         return{
             sliderList:[],
