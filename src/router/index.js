@@ -7,6 +7,7 @@ import Rank from '../components/rank/rank'
 import Recommend from '../components/recommend/recommend'
 import Search from '../components/search/search'
 import Singer from '../components/singer/singer'
+import singerDetail from '../components/singer/singer-detail'
 export default new Router({
   routes: [
     {
@@ -19,7 +20,13 @@ export default new Router({
         },
         {
           path:'/singer',
-          component:Singer
+          component:Singer,
+          children:[
+            {
+              path:':id',
+              component:singerDetail
+            }
+          ]
         },
         {
           path:'/rank',

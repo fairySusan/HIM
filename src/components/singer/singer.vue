@@ -1,17 +1,30 @@
 <style lang="less">
     .singer{
-        
+        .singer-poto{
+            flex: 0 0 40px;
+            margin:0 0.6rem; 
+            img{
+                border-radius: 50%;
+            }
+        }
     }
 </style>
 
 <template>
     <div class="singer">
         <mt-index-list>
-            <mt-index-section v-for="items in singerList" :key="items.title" :index="items.title">
-                <mt-cell v-for="item in items" :key="item.title" :title="item.name">
-                </mt-cell>
+            <mt-index-section v-for="itemList in singerList" :key="itemList.title" :index="itemList.title">
+                <div v-for="item in itemList.items" :key="item.id" @click="clickSingerItem(item)">
+                    <mt-cell>
+                        <div class="singer-poto">
+                            <img  :src="item.poto" alt="" width="100%" height="100%">
+                        </div>
+                        <span>{{item.name}}</span>
+                    </mt-cell>
+                </div>
             </mt-index-section>
         </mt-index-list>
+        <router-view></router-view>
     </div>
 </template>
 <script>
@@ -32,7 +45,6 @@ export default {
             getSingerList().then(res=>{
                 if(res.code ===  ERR_OK){
                     this.singerList = this.sortSinger(res.data.list);
-                    console.log(this.singerList);
                 }
             })
         },
@@ -81,6 +93,12 @@ export default {
                 })
             }
             return hot.concat(ret);
+        },
+        //歌手详情页的跳转
+        clickSingerItem(item){
+            this.$router.push({
+                path:`/singer/${item.id}`
+            })
         }
     }
 }
