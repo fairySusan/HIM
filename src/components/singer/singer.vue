@@ -31,6 +31,7 @@
 import { getSingerList } from "api/singer";
 import {ERR_OK} from 'api/config';
 import Singer from 'common/js/singer'
+import {mapMutations} from 'vuex'
 export default {
     data(){
         return{
@@ -99,7 +100,11 @@ export default {
             this.$router.push({
                 path:`/singer/${item.id}`
             })
-        }
+            this.setSinger(item);
+        },
+        ...mapMutations({
+            setSinger:'SET_SINGER'
+        })
     }
 }
 </script>

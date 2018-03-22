@@ -24,8 +24,22 @@
     </transition>
 </template>
 <script>
+import {mapGetters} from 'vuex';
 export default {
-  
+    data(){
+        return{
+
+        }
+    },
+    created(){
+        console.log(this.singer);
+    },
+    computed:{
+        ...mapGetters([
+            'singer'
+        ])
+    }
+
 }
 </script>
 

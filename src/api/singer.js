@@ -8,7 +8,6 @@ export function getSingerList(){
         pagesize:100,
         key:'all_all_all',
         pagenum:1,
-        g_tk:545316097,
         platform:'yqq',
         uin:0,
         hostUin:0,
