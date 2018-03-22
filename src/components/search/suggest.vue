@@ -1,28 +1,118 @@
 // 搜索歌曲建议组件
 <style lang="less">
+@import '../../assets/less/var.less';
     .suggest{
-        
+        position: absolute;
+        top:8%;
+        width: 100%;
+        .result-wrapper{
+            margin:0 10px 0 10px;
+            .result-list{
+                background:white;
+                border-bottom:1px solid @underlineColor;
+                padding:5px 10px;
+                .icon-mine:before{
+                    content:'/e912';
+                }
+                .icon-music{
+
+                }
+                .text{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content:center;
+                    .song-name{
+                        font-size:16px;
+                    }
+                    .singer-name{
+                        color:#000;
+                        opacity:0.5;
+                    }
+                }
+            }
+        }
     }
 </style>
 <template>
   <div class="suggest">
-
+    <ul class="result-wrapper">
+        <li class="result-list" v-for="item in result" :key="item.songid">
+            <div class="icon">
+                <i :class="getIconCls(item)"></i>
+            </div>
+            <div class="text">
+                <span class="song-name">{{item.songname}}</span>
+                <span class="singer-name" v-html="getDisplayName(item)"></span>
+            </div>
+        </li>
+    </ul>
   </div>
 </template>
 <script>
+import {search} from 'api/search'
+import {ERR_OK} from 'api/config'
+import {filterSinger} from 'common/js/song'
+const TYPE_SINGER = 'singer'
 export default {
-  data(){
-      return{
-
-      }
-  },
-  create(){
-
-  },
-  methods:{
-
-  }
+    props:{
+        query:{
+            type:String,
+            default:''
+        },
+        showSinger:{
+            type:Boolean,
+            default:true
+        }
+    },
+    data(){
+        return{
+            page:1,
+            result:[]
+        }
+    },
+    created(){
+        // this.search();
+    },
+    methods:{
+        search(){
+            search(this.query,this.page,this.showSinger).then(res => {
+                if (res.code === ERR_OK) {
+                   this.result = this.getResult(res.data);
+                }
+            })
+        },
+        getResult(data){
+            let ret = [];
+            if(data.zhida && data.zhida.singerid){
+                ret.push({...data.zhida,...{type:TYPE_SINGER}});//对象扩展运算符ES6
+            }
+            if (data.song) {
+                ret = ret.concat(data.song.list);
+            }
+            return ret;
+        },
+        //根据type的值来显示不同的图标样式
+        getIconCls(item){
+            if(item.type === TYPE_SINGER){
+                return 'icon-mine';
+            }else{
+                return 'icon-music';
+            }
+        },
+        //处理歌手的数据
+        getDisplayName(item){
+            if (item.type === TYPE_SINGER) {
+                return item.singername;
+            }else{
+                return filterSinger(item.singer);
+            }
+        }
+    },
+    watch:{
+        //监听查询参数的改变
+        query(){
+            this.search();
+        }
+    }
 }
 </script>
-
-

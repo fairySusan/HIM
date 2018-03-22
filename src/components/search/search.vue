@@ -39,6 +39,7 @@
         :value="item.value">
       </mt-cell>
     </mt-search>
+    <suggest :query="value"></suggest>
      <div class="hot-search-tag" v-if="showTags">
       <h4 class="title">热门搜索歌曲</h4>
       <ul class="tag-wrap">
@@ -49,8 +50,12 @@
 </template>
 <script>
 import {getHotKey} from 'api/search'
-import {ERR_OK} from 'api/config';
+import {ERR_OK} from 'api/config'
+import Suggest from './suggest'
 export default {
+  components:{
+    Suggest
+  },
   data(){
     return{
       value:'',
