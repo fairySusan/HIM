@@ -39,7 +39,7 @@
         :value="item.value">
       </mt-cell>
     </mt-search>
-    <suggest :query="value"></suggest>
+    <suggest @selectItem="saveSearch" :query="value"></suggest>
      <div class="hot-search-tag" v-if="showTags">
       <h4 class="title">热门搜索歌曲</h4>
       <ul class="tag-wrap">
@@ -52,6 +52,7 @@
 import {getHotKey} from 'api/search'
 import {ERR_OK} from 'api/config'
 import Suggest from './suggest'
+import {mapActions} from 'vuex'
 export default {
   components:{
     Suggest
@@ -68,6 +69,7 @@ export default {
     this._getHotKey();
   },
   methods:{
+    //获取关键词数据
     _getHotKey(){
       getHotKey().then(res =>{
         if(res.code ===  ERR_OK){
@@ -80,7 +82,15 @@ export default {
       if (this.value !== '' && this.value !== null) {
         this.showTags = false;
       }
-    }
+    },
+    //保存搜索历史记录
+    saveSearch(msg){
+      console.log(msg);
+      this.saveSearchHistory(this.query);
+    },
+    ...mapActions([
+      'saveSearchHistory'
+    ])
   }
 }
 </script>

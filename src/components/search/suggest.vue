@@ -36,7 +36,7 @@
 <template>
   <div class="suggest">
     <ul class="result-wrapper">
-        <li class="result-list" v-for="item in result" :key="item.songid">
+        <li class="result-list" v-for="item in result" :key="item.songid" @click="selectItem(item)">
             <div class="icon">
                 <i :class="getIconCls(item)"></i>
             </div>
@@ -106,6 +106,10 @@ export default {
             }else{
                 return filterSinger(item.singer);
             }
+        },
+        //点击搜索出来的歌曲事件
+        selectItem(item){
+            this.$emit('selectItem',item);
         }
     },
     watch:{
