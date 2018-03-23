@@ -48,7 +48,7 @@
     </ul>
   </div>
 </template>
-<script>
+<script type="text/ecmascript-6">
 import {search} from 'api/search'
 import {ERR_OK} from 'api/config'
 import {filterSinger} from 'common/js/song'
@@ -109,7 +109,7 @@ export default {
         },
         //点击搜索出来的歌曲事件
         selectItem(item){
-            this.$emit('selectItem',item);
+            this.$emit('select', item)
         }
     },
     watch:{

@@ -39,7 +39,7 @@
         :value="item.value">
       </mt-cell>
     </mt-search>
-    <suggest @selectItem="saveSearch" :query="value"></suggest>
+    <suggest @select="saveSearch" :query="value"></suggest>
      <div class="hot-search-tag" v-if="showTags">
       <h4 class="title">热门搜索歌曲</h4>
       <ul class="tag-wrap">
@@ -48,7 +48,7 @@
     </div>
   </div>
 </template>
-<script>
+<script type="text/ecmascript-6">
 import {getHotKey} from 'api/search'
 import {ERR_OK} from 'api/config'
 import Suggest from './suggest'
@@ -86,7 +86,7 @@ export default {
     //保存搜索历史记录
     saveSearch(msg){
       console.log(msg);
-      this.saveSearchHistory(this.query);
+      this.saveSearchHistory(msg);
     },
     ...mapActions([
       'saveSearchHistory'

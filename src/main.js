@@ -18,5 +18,6 @@ Vue.config.productionTip = false
 Vue.use(mintUI);
 /* eslint-disable no-new */
 new Vue({
-  router
+  router,
+  store
 }).$mount('#app')
