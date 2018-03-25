@@ -20,13 +20,34 @@ function insertArray(arr,val,compare,maxLen){
         arr.pop();
     }
 }
+function deleteFromArray(arr, compare) {
+    const index = arr.findIndex(compare)
+    if (index > -1) {
+      arr.splice(index, 1)
+    }
+    return arr;
+}
 export function saveSearch(query){
     let searches = storage.get(SEARCH_KEY,[]);
     insertArray(searches,query,(item)=>{
-        return item.songid === query.songid
+        return item.songname === query.songname
     },SEARCH_MAX_LENGTH)
     storage.set(SEARCH_KEY,searches);
     return searches;
+}
+export function clearHistory(flag){
+    //flag为1清除全部记录，其他清除单个记录
+    if (flag === 1) {
+        storage.remove(SEARCH_KEY);
+        return [];
+    }else{
+        let searches = storage.get(SEARCH_KEY, [])
+        deleteFromArray(searches, (item) => {
+          return item.songname === flag.songname
+        })
+        storage.set(SEARCH_KEY, searches);
+        return searches;
+    }
 }
 //从本地缓存区读
 export function loadSearch(){
