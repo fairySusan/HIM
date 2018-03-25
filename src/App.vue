@@ -17,16 +17,18 @@
         <router-view></router-view>
       </keep-alive>
     </div>
-    
+    <player></player>
   </div>
 </template>
 
 <script>
 import navBar from './components/navBar/navBar'
+import player from "./components/player/player";
 export default {
   name: 'App',
   components:{
-    navBar
+    navBar,
+    player
   }
 }
 </script>

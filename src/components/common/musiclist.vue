@@ -45,16 +45,16 @@
             <h6 class="singer-name">
                 <!-- <span class="return-btn" @click="returnClick">&lt</span> -->
                 <slot></slot>
-                {{singerInfo.singername}}
+                {{detailInfo.title}}
             </h6>
             <div class="singer-img">
-                <img :src="singerInfo.singerImg" alt="歌手图片" width="100%">
+                <img :src="detailInfo.imgUrl" alt="歌手图片" width="100%">
             </div>
             <i class="play-icon"></i>
         </div>
         <!-- 歌曲目录 -->
         <ul class="songs-list">
-            <li class="song-item" v-for="item in musicData" :key="item.songid">
+            <li class="song-item" v-for="(item,index) in songList" :key="item.songid" @click="clickSong(item,index)">
                 <h6 class="song-name">{{item.songname}}</h6>
                 <span class="des-text grayFont">{{item.singer}}-{{item.albumname}}</span>
             </li>
@@ -62,8 +62,9 @@
     </div>
 </template>
 <script>
+import {mapActions} from 'vuex'
 export default{
-    props:["musicData","singerInfo"],
+    props:["songList","detailInfo"],
     data(){
         return{
 
@@ -73,7 +74,16 @@ export default{
 
     },
     methods:{
-        
+        // 点击歌曲事件
+        clickSong(item,index){
+            this.selectPlay({
+                list:this.songList,
+                index:index
+            })
+        },
+        ...mapActions([
+            "selectPlay"
+        ])
     }
 }
 </script>

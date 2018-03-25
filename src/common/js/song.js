@@ -19,7 +19,7 @@ export function createSong(musicDataItem){
     songname: musicDataItem.songname,//歌曲名
     albumname: musicDataItem.albumname,//专辑名
     duration: musicDataItem.interval,//歌曲时长
-    img: `https://y.gtimg.cn/music/photo_new/T001R300x300M000${musicDataItem.albummid}.jpg?max_age=2592000`,
+    img: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicDataItem.albummid}.jpg?max_age=2592000`,
     url: `http://ws.stream.qqmusic.qq.com/${musicDataItem.songid}.m4a?fromtag=46`
   })
 }

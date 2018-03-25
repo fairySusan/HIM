@@ -45,7 +45,7 @@
 <template>
   <div class="rank">
     <ul class="rank-ul">
-      <li class="rank-list"  v-for="listItem in rankSongList.topList" :key="listItem.id">
+      <li class="rank-list"  v-for="listItem in rankSongList.topList" :key="listItem.id" @click="clickRankItem(listItem)">
         <div class="rank-img"><img :src="listItem.picUrl" alt="专辑图片" width="100%" height="100%"></div>
         <div class="rank-item">
           <h6 class="rank-title">{{listItem.topTitle}}</h6>
@@ -59,11 +59,14 @@
         </div>
       </li>
     </ul>
+    <router-view></router-view>
   </div>
 </template>
 <script>
 import { getRankList } from "api/rank";
 import {ERR_OK} from 'api/config';
+import {mapMutations} from 'vuex'
+
 export default {
   data(){
     return{
@@ -78,10 +81,17 @@ export default {
       getRankList().then(res => {
          if(res.code ===  ERR_OK){
             this.rankSongList = res.data;
-            console.log(this.rankSongList);
          }
       })
-    }
+    },
+    //点击排行榜list跳转到排行榜详情页
+    clickRankItem(item){
+      this.$router.push({path:`/rank/${item.id}`});
+      this.setTopList(item);
+    },
+    ...mapMutations({
+        setTopList:'SET_TOP_LIST'
+    })
   }
 }
 </script>

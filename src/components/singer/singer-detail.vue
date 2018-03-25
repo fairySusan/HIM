@@ -10,18 +10,11 @@
         bottom:0;
         background:white;
     }
-    /* 转场动画 */
-    .slide-enter-active,.slide-leave-active{
-        transition:all 0.3s;
-    }
-    .slide-enter,.slide-leave-to{
-        transform:translate3d(100%,0,0);
-    }
 </style>
 <template>
     <transition name="slide">
         <div class="singer-detail">
-            <music-list :musicData="musicData" :singerInfo="singerInfo">
+            <music-list :songList="musicData" :detailInfo="singerInfo">
                 <span class="return-btn" @click="returnClick">&lt</span>
             </music-list>
         </div>
@@ -42,8 +35,8 @@ export default {
             musicData:[],
             singerImg:'',//歌手图片
             singerInfo:{
-                singerImg:'',
-                singername:''
+                imgUrl:'',
+                title:''
             }
         }
     },
@@ -60,8 +53,8 @@ export default {
                 if(res.code ===  ERR_OK){
                      this.musicData = this.normalizeSongs(res.data.list);
                      this.singerImg = `https://y.gtimg.cn/music/photo_new/T001R300x300M000${res.data.singer_mid}.jpg?max_age=2592000`
-                     this.singerInfo.singerImg = this.singerImg;
-                     this.singerInfo.singername = res.data.singer_name;
+                     this.singerInfo.imgUrl = this.singerImg;
+                     this.singerInfo.title = res.data.singer_name;
                      console.log(this.singerInfo);
                 }
             })

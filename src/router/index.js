@@ -8,6 +8,7 @@ import Recommend from '../components/recommend/recommend'
 import Search from '../components/search/search'
 import Singer from '../components/singer/singer'
 import singerDetail from '../components/singer/singer-detail'
+import rankDetail from '../components/rank/rank-detail'
 export default new Router({
   routes: [
     {
@@ -30,7 +31,13 @@ export default new Router({
         },
         {
           path:'/rank',
-          component:Rank
+          component:Rank,
+          children:[
+            {
+              path:':id',
+              component:rankDetail
+            }
+          ]
         },
         {
           path:'/search',
