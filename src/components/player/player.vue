@@ -1,4 +1,5 @@
 <style lang='less'>
+@import '../../assets/less/var.less';
     .player{
         #screen-player{
             .arrow-icon{
@@ -17,68 +18,192 @@
                     border-radius:50%;
                 }
             }
+           .tools-bar{
+               position: fixed;
+               bottom: 0;
+           }
         }
-      .mini-player{
-
-      }
+        #mini-player{
+            position: fixed;
+            z-index:1002;
+            bottom: 0;
+            height:60px;
+            background:@themeColor;
+            width:100%;
+            border:1px solid @underlineColor;
+            .minilyric-img{
+                width:50px;
+                height:50px;
+                margin-left:10px;
+                position: absolute;
+                top:50%;
+                transform: translate(0,-50%);
+                img{
+                    vertical-align: middle;
+                    border-radius: 50%;
+                }
+            }
+            .text{
+                position: absolute;
+                top:50%;
+                left:70px;
+                transform: translate(0,-50%);
+                .song-name{
+                    font-size:16px;
+                    color:white;
+                }
+                .singer-name{
+                    font-size:12px;
+                }
+            }
+            .icon-btn{
+                position: absolute;
+                top:50%;
+                right:10px;
+                transform: translate(0,-50%);
+            }
+        }
     }
 </style>
 <template>
-    <div class="player cover" v-show="playList.length>0">
+    <div class="player clearfix" v-show="playList.length>0">
 <!-- 全屏的播放器 -->
-        <div id="screen-player" v-show="fullScreen">
-            <i class="arrow-icon fl">&lt</i>
+    <transition name="normal" @enter="enter" @after-enter="afterEnter" @leave="leave" @after="leaveEnter">
+        <div id="screen-player" class="cover" v-show="fullScreen" ref="screenPlayer">
+            <i class="arrow-icon fl" @click="clickReturn()">&lt</i>
             <div class="des-title">
                 <span class="song-name">{{currentSong.songname}}</span>
                 <h6 class="singer-name">{{currentSong.singer}}</h6>
             </div>
-            <div class="lyric-img">
+            <div class="lyric-img" ref="lyricImg">
                 <img :src="currentSong.img" alt="专辑封面">
             </div>
             <!-- 下面的工具栏 -->
             <div class="tools-bar">
-                <button class="mode-btn">1</button>
-                <button class="last-btn">2</button>
-                <button class="next-btn">3</button>
-                <button class="like-btn">4</button>
+                <button class="last-btn">上一曲</button>
+                <button class="mode-btn" @click="togglePlaying">暂停</button>
+                <button class="next-btn">下一曲</button>
+                <button class="like-btn">收藏</button>
             </div>
         </div>
+    </transition>
 <!-- mini的播放器 -->
-        <div id="mini-player" v-show="!fullScreen">
-            <div class="minilyric-img">
-                <img :src="currentSong.img" alt="专辑封面">
+    <transition class="mini">
+        <div id="mini-player" v-show="!fullScreen" @click="clickMini">
+            <div class="minilyric-img fl">
+                <img :src="currentSong.img" alt="专辑封面" width="100%" height="100%">
             </div>
-            <p>
-                <h6 class="song-name"></h6>
-                <span class="singer-name"></span>
-            </p>
-            <div>
-                <button class="state-btn"></button>
-                <button class="list-btn"></button>
+            <div class="text fl">
+               <h6 class="song-name">{{currentSong.songname}}</h6>
+               <span class="singer-name grayFont">{{currentSong.singer}}</span> 
+            </div>
+            <div class="icon-btn">
+                <button class="state-btn">暂停</button>
+                <button class="list-btn">播放列表</button>
             </div>
         </div>
+    </transition>
+    <audio ref="audio" :src="currentSong.url">
+        <source :src="currentSong.url" type="audio/mpeg">
+        您的浏览器不支持 audio 元素。
+    </audio>
     </div>
 </template>
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters,mapMutations} from 'vuex'
+import animations from 'create-keyframe-animation'
 export default{
     data(){
         return{
-
         }
     },
     created(){
 
     },
     methods:{
+        //点击返回按钮隐藏全屏播放器
+        clickReturn(){
+            this.SetFullScreen(false);
+        },
+        //点击mini播放器显示全屏播放器
+        clickMini(){
+             this.SetFullScreen(true);
+        },
+        ...mapMutations({
+            SetFullScreen: 'SET_FULL_SCREEN',
+            setPlaying:'SET_PLAYING'
+        }),
+        enter(el,done){
+            const {x,y,scale} = this.getPosAndScale();
+            let animation = {
+                0:{
+                    transform:'translate3d(${x}px,${y}px,0) scale(${scale})'
+                },
+                60:{
+                    transform:'translate3d(0,0,0) scale(1.1)'
+                },
+                100:{
+                    transform:'translate3d(0,0,0) scale(1)'
+                }
+            }
+            animations.registerAnimation({
+                name:'move',
+                animation,
+                presets:{
+                    duration:400,
+                    easing:'line'
+                }
+            });
+            animations.runAnimation(this.$refs.lyricImg,'move',done);
+        },
+        afterEnter(el,done){
+            animations.unregisterAnimation('move');
+            this.$refs.lyricImg.style.animation = '';
+        },
+        leave(el,done){
+            this.$refs.lyricImg.style.transition = 'all 0.4s';
+            const {x,y,scale} = this.getPosAndScale();
+        },
+        leaveEnter(el,done){
 
+        },
+        getPosAndScale(){
+            const targetWidth = 50;
+            const paddingLeft = 35;
+            const paddingBottom = 30;
+            const paddingTop = 80;
+            const width = window.innerWidth*0.8;
+            const scale = targetWidth/width;
+            const x = -(window.innerWidth/2-paddingLeft);
+            const y = window.innerHeight-paddingTop-width/2-paddingBottom;
+            return {x,y,scale}
+        },
+        //暂停播放按钮点击事件
+        togglePlaying(){
+            this.setPlaying(!this.playing);
+        }
     },
     computed:{
         ...mapGetters([
             'fullScreen',
             'playList',
-            'currentSong'
+            'currentSong',
+            'playing'
         ])
+    },
+    watch:{
+        currentSong(){
+            this.$nextTick(()=>{
+                this.$refs.audio.play();
+            }) 
+        },
+        //监听playing控制音乐播放还是暂停
+        playing(newPlaying){
+            const audio = this.$refs.audio;
+            this.$nextTick(()=>{
+                newPlaying ? audio.play() : audio.pause()
+            })
+        }
     }
 }
 </script>

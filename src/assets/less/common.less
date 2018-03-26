@@ -131,11 +131,9 @@ table {
         text-align: center;
     }
 }
-.content{
-    .grayFont{
-        color: rgb(0,0,0);
-        opacity: 0.5;
-    }
+.grayFont{
+    color: rgb(0,0,0);
+    opacity: 0.5;
 }
 /* 转场动画 */
 .slide-enter-active,.slide-leave-active{
@@ -143,6 +141,28 @@ table {
 }
 .slide-enter,.slide-leave-to{
     transform:translate3d(100%,0,0);
+}
+.normal-enter-active,.normal-leave-active{
+    transition: all 0.4s;
+    .top, .bottom{
+        transition: all 0.4s cubic-bezier(0.86, 0.18, 0.82, 1.32);
+    }
+}
+.normal-enter,.normal-leave-to{
+    opacity: 0;
+    .top{
+        transform: translate3d(0, -100px, 0);
+    }
+    .bottom{
+        transform: translate3d(0, 100px, 0);
+    }
+    
+}
+.mini-enter-active,.mini-leave-active{
+    transition: all 0.4s;
+}
+.mini-enter, .mini-leave-to{
+    opacity: 0;
 }
 .cover{
     position:fixed;

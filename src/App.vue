@@ -12,7 +12,7 @@
       </div>
     </div>
     <nav-bar></nav-bar>
-    <div class="content">
+    <div class="content clearfix">
       <keep-alive>
         <router-view></router-view>
       </keep-alive>
