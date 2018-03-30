@@ -10,7 +10,6 @@ import 'mint-ui/lib/style.css'
 import fastclick from 'fastclick'
 import './assets/less/common.less'
 import './assets/less/var.less'
-import './assets/less/icon.less'
 
 fastclick.attach(document.body);
 Vue.config.productionTip = false

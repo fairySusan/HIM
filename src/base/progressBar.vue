@@ -17,7 +17,12 @@
              
         }
         .circle-btn{
-           
+           position: absolute;
+           top:-3px;
+           width:10px;
+           height:10px;
+           background:@themeColor;
+           border-radius:50%;
 
         }
     }
@@ -30,7 +35,7 @@
   </div>
 </template>
 <script>
-const CIRCLR_BTN = 16
+const CIRCLR_BTN = 10
 export default {
   props:{
       percent:{

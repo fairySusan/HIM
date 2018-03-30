@@ -25,6 +25,16 @@
                right:0;
                margin:auto;
                width:90%;
+               .tools-btns{
+                   display: flex;
+                   display: -webkit-flex;
+                   flex-direction: row;
+                   justify-content: center;
+                   align-items:center;
+                  .playMode-icon,.last-icon,.next-icon,.play-icon,.stop-icon,.like-icon{
+                      margin:0 15px;
+                  }
+               }
            }
         }
         #mini-player{
@@ -87,13 +97,16 @@
             <div class="tools-bar">
                 <div>
                     <span class="play-time"></span>
-                    <progress-bar></progress-bar>
+                    <progress-bar :percent="percent"></progress-bar>
                     <span class="total-time"></span>
                 </div>
-                <button class="last-btn" @click="playLast">上一曲</button>
-                <button class="mode-btn" @click="togglePlaying">暂停</button>
-                <button class="next-btn" @click="playNext">下一曲</button>
-                <button class="like-btn">收藏</button>
+                <div class="tools-btns">
+                    <button class="playMode-icon"></button>
+                    <button class="last-icon" @click="playLast"></button>
+                    <button class="play-icon" @click="togglePlaying"></button>
+                    <button class="next-icon" @click="playNext"></button>
+                    <button class="like-icon"></button>
+                </div>
             </div>
         </div>
     </transition>
@@ -108,8 +121,8 @@
                <span class="singer-name grayFont">{{currentSong.singer}}</span> 
             </div>
             <div class="icon-btn">
-                <button class="state-btn">暂停</button>
-                <button class="list-btn">播放列表</button>
+                <button class="state-btn play-icon"></button>
+                <button class="list-btn playList-icon"></button>
             </div>
         </div>
     </transition>
@@ -129,6 +142,8 @@ export default{
     },
     data(){
         return{
+            percent:null,//播放进度百分比
+            currentTime:null//当前播放的时间
         }
     },
     created(){
@@ -219,8 +234,12 @@ export default{
     watch:{
         currentSong(){
             this.$nextTick(()=>{
+                this.currentTime = this.$refs.audio.currentTime;
                 this.$refs.audio.play();
             }) 
+        },
+        percent(){
+            return this.currentTime/this.currentSong.duration;
         },
         //监听playing控制音乐播放还是暂停
         playing(newPlaying){
