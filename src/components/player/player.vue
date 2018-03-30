@@ -21,6 +21,10 @@
            .tools-bar{
                position: fixed;
                bottom: 0;
+               left:0;
+               right:0;
+               margin:auto;
+               width:90%;
            }
         }
         #mini-player{
@@ -78,11 +82,17 @@
             <div class="lyric-img" ref="lyricImg">
                 <img :src="currentSong.img" alt="专辑封面">
             </div>
+            
             <!-- 下面的工具栏 -->
             <div class="tools-bar">
-                <button class="last-btn">上一曲</button>
+                <div>
+                    <span class="play-time"></span>
+                    <progress-bar></progress-bar>
+                    <span class="total-time"></span>
+                </div>
+                <button class="last-btn" @click="playLast">上一曲</button>
                 <button class="mode-btn" @click="togglePlaying">暂停</button>
-                <button class="next-btn">下一曲</button>
+                <button class="next-btn" @click="playNext">下一曲</button>
                 <button class="like-btn">收藏</button>
             </div>
         </div>
@@ -112,7 +122,11 @@
 <script>
 import {mapGetters,mapMutations} from 'vuex'
 import animations from 'create-keyframe-animation'
+import progressBar from 'base/progressBar'
 export default{
+    components:{
+        progressBar
+    },
     data(){
         return{
         }
@@ -131,7 +145,8 @@ export default{
         },
         ...mapMutations({
             SetFullScreen: 'SET_FULL_SCREEN',
-            setPlaying:'SET_PLAYING'
+            setPlaying:'SET_PLAYING',
+            setCurrentIndex:'SET_CURRENT_INDEX'
         }),
         enter(el,done){
             const {x,y,scale} = this.getPosAndScale();
@@ -181,6 +196,15 @@ export default{
         //暂停播放按钮点击事件
         togglePlaying(){
             this.setPlaying(!this.playing);
+        },
+        //上一首播放按钮点击事件
+        playLast(){
+            let index =  this.currentIndex>0 ? this.currentIndex-1:this.currentIndex;
+            this.setCurrentIndex(index);
+        },
+        //下一首播放按钮点击事件
+        playNext(){
+             this.setCurrentIndex(this.currentIndex+1);
         }
     },
     computed:{
@@ -188,7 +212,8 @@ export default{
             'fullScreen',
             'playList',
             'currentSong',
-            'playing'
+            'playing',
+            'currentIndex'
         ])
     },
     watch:{
