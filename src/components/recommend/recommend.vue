@@ -78,7 +78,11 @@ export default {
             getRecommend().then(res => {
                 if(res.code ===  ERR_OK){
                     this.sliderList = res.data.slider;
-                    this.songList   = res.data.songList;
+                    if (res.data.songList.length>0) {
+                        this.songList   = res.data.songList;
+                    }else{
+                        console.log("songList数据为空");
+                    }
                 }
             });
         }

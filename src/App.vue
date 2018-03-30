@@ -1,13 +1,23 @@
 <style lang="less">
+ .app{
+  .userPoto{
+    width: 30px;
+    height: 30px;
+    border-radius:50%;
+  }
+  .userName{
+    color:white;
+  }
+ }
 </style>
 
 <template>
-  <div>
+  <div class="app">
     <div class="header">
       <div class="user-info">
         <a href="#">
-          <img src="#" alt="用户头像">
-          <span class="userName">用户名</span>
+            <img class="userPoto" src="./assets/userPoto.jpg" alt="用户头像" width="100%" height="100%">
+          <span class="userName">fairySusan</span>
         </a>
       </div>
     </div>
