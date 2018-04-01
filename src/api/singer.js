@@ -1,3 +1,4 @@
+// 得到歌手页面数据的api
 import jsonp from '../common/js/jsonp'
 import {commonParams,options} from './config'
 export function getSingerList(){

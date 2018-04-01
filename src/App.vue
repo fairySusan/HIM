@@ -15,10 +15,10 @@
   <div class="app">
     <div class="header">
       <div class="user-info">
-        <a href="#">
+        <router-link to="/userCenter">
             <img class="userPoto" src="./assets/userPoto.jpg" alt="用户头像" width="100%" height="100%">
           <span class="userName">fairySusan</span>
-        </a>
+        </router-link>
       </div>
     </div>
     <nav-bar></nav-bar>

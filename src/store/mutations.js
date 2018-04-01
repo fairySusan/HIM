@@ -27,6 +27,12 @@ const mutations = {
     },
     [types.SET_CURRENT_INDEX](state,currentIndex) {
         state.currentIndex = currentIndex
+    },
+    [types.SET_FAVORITE_LIST](state,list) {
+        state.favoriteList = list
+    },
+    [types.SET_PLAY_HIS_LIST](sate,list){
+        state.playHisList = list
     }
 
 }

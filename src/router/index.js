@@ -9,6 +9,7 @@ import Search from '../components/search/search'
 import Singer from '../components/singer/singer'
 import singerDetail from '../components/singer/singer-detail'
 import rankDetail from '../components/rank/rank-detail'
+import userCenter from '../components/user-center/user-center'
 export default new Router({
   routes: [
     {
@@ -44,6 +45,10 @@ export default new Router({
           component:Search
         }
       ]
+    },
+    {
+      path:'/userCenter',
+      component:userCenter
     }
   ]
 })

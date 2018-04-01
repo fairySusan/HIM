@@ -107,16 +107,17 @@
                     <button class="last-icon" @click="playLast"></button>
                     <button class="play-icon" @click="togglePlaying"></button>
                     <button class="next-icon" @click="playNext"></button>
-                    <button class="like-icon"></button>
+                    <button class="like-icon" @click="favoriteSong"></button>
                 </div>
             </div>
         </div>
     </transition>
-<!-- 播放历史列表 -->
-<played-list v-show="isDisplay" @close="closePlayHis()"></played-list>
+
 <!-- mini的播放器 -->
     <transition class="mini">
         <div id="mini-player" v-if="!fullScreen" @click="clickMini">
+            <!-- 播放历史列表 -->
+            <played-list v-show="isDisplay" @close="closePlayHis()"></played-list>
             <div class="minilyric-img fl">
                 <img :src="currentSong.img" alt="专辑封面" width="100%" height="100%">
             </div>
@@ -137,7 +138,7 @@
     </div>
 </template>
 <script>
-import {mapGetters,mapMutations} from 'vuex'
+import {mapGetters,mapMutations,mapActions} from 'vuex'
 import animations from 'create-keyframe-animation'
 import progressBar from 'base/progressBar'
 import playedList from '../common/playedList'
@@ -165,11 +166,6 @@ export default{
         clickMini(){
              this.SetFullScreen(true);
         },
-        ...mapMutations({
-            SetFullScreen: 'SET_FULL_SCREEN',
-            setPlaying:'SET_PLAYING',
-            setCurrentIndex:'SET_CURRENT_INDEX'
-        }),
         enter(el,done){
             const {x,y,scale} = this.getPosAndScale();
             let animation = {
@@ -235,7 +231,21 @@ export default{
         // 关闭播放历史列表组件
         closePlayHis(){
             this.isDisplay = false;
-        }
+        },
+        // 点击收藏按钮收藏这首歌
+        favoriteSong(){
+            console.log('click');
+            this.saveFavoriteList(this.currentSong);
+        },
+        ...mapMutations({
+            SetFullScreen: 'SET_FULL_SCREEN',
+            setPlaying:'SET_PLAYING',
+            setCurrentIndex:'SET_CURRENT_INDEX'
+        }),
+        ...mapActions([
+            'saveFavoriteList',
+            'savePlayHisList'
+        ])
     },
     computed:{
         ...mapGetters([
@@ -251,6 +261,7 @@ export default{
             this.$nextTick(()=>{
                 this.currentTime = this.$refs.audio.currentTime;
                 this.$refs.audio.play();
+                this.savePlayHisList(this.currentSong);
             }) 
         },
         percent(){
