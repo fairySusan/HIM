@@ -3,7 +3,8 @@
     .player{
         #screen-player{
             .arrow-icon{
-                
+                position: absolute;
+                left:10px;
             }
             .des-title{
                 text-align:center;
@@ -72,6 +73,7 @@
             }
             .icon-btn{
                 position: absolute;
+                z-index:1002;
                 top:50%;
                 right:10px;
                 transform: translate(0,-50%);
@@ -80,11 +82,11 @@
     }
 </style>
 <template>
-    <div class="player clearfix" v-show="playList.length>0">
+    <div class="player clearfix" v-if="playList.length>0">
 <!-- 全屏的播放器 -->
-    <transition name="normal" @enter="enter" @after-enter="afterEnter" @leave="leave" @after="leaveEnter">
-        <div id="screen-player" class="cover" v-show="fullScreen" ref="screenPlayer">
-            <i class="arrow-icon fl" @click="clickReturn()">&lt</i>
+    <transition name="normal">
+        <div id="screen-player" class="cover" v-if="fullScreen" ref="screenPlayer">
+            <i class="arrow-icon" @click="clickReturn()">&lt</i>
             <div class="des-title">
                 <span class="song-name">{{currentSong.songname}}</span>
                 <h6 class="singer-name">{{currentSong.singer}}</h6>
@@ -110,9 +112,11 @@
             </div>
         </div>
     </transition>
+<!-- 播放历史列表 -->
+<played-list v-show="isDisplay" @close="closePlayHis()"></played-list>
 <!-- mini的播放器 -->
     <transition class="mini">
-        <div id="mini-player" v-show="!fullScreen" @click="clickMini">
+        <div id="mini-player" v-if="!fullScreen" @click="clickMini">
             <div class="minilyric-img fl">
                 <img :src="currentSong.img" alt="专辑封面" width="100%" height="100%">
             </div>
@@ -122,7 +126,7 @@
             </div>
             <div class="icon-btn">
                 <button class="state-btn play-icon"></button>
-                <button class="list-btn playList-icon"></button>
+                <button class="list-btn playList-icon" @click.stop="showPlayHis()"></button>
             </div>
         </div>
     </transition>
@@ -136,14 +140,17 @@
 import {mapGetters,mapMutations} from 'vuex'
 import animations from 'create-keyframe-animation'
 import progressBar from 'base/progressBar'
+import playedList from '../common/playedList'
 export default{
     components:{
-        progressBar
+        progressBar,
+        playedList
     },
     data(){
         return{
             percent:null,//播放进度百分比
-            currentTime:null//当前播放的时间
+            currentTime:null,//当前播放的时间
+            isDisplay:false//控制播放历史列表是否可见
         }
     },
     created(){
@@ -220,6 +227,14 @@ export default{
         //下一首播放按钮点击事件
         playNext(){
              this.setCurrentIndex(this.currentIndex+1);
+        },
+        // 显示播放历史列表组件
+        showPlayHis(){
+            this.isDisplay = true;
+        },
+        // 关闭播放历史列表组件
+        closePlayHis(){
+            this.isDisplay = false;
         }
     },
     computed:{

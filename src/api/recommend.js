@@ -9,3 +9,13 @@ export  function getRecommend(){
     })
     return jsonp(url,data,options);
 }
+export function getHotRecomend(){
+    const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
+    const data = Object.assign({},commonParams,{
+        platform:'yqq',
+        uin:0,
+        needNewCode:1,
+        hostUin: 0
+    })
+    return jsonp(url,data,options);
+}

@@ -1,7 +1,7 @@
 import * as types from './mutation-types'
 
 const mutations = {
-    [types.SET_SINGER](state,singer) {
+    [types.SET_SINGER](state,singer) {//ES6计算属性命名功能，使用一个常量作为函数名
         state.singer = singer
     },
     [types.SET_SEARCH_HISTORY](state,history){

@@ -118,7 +118,6 @@ export default {
     },
     //保存搜索历史记录
     saveSearch(msg){
-      console.log(msg);
       this.saveSearchHistory(msg);
     },
     ...mapActions([

@@ -1,3 +1,4 @@
+// 都是mutations里面的事件类型
 export const SET_SINGER = 'SET_SINGER'
 export const SET_SEARCH_HISTORY = 'SET_SEARCH_HISTORY'
 export const SET_TOP_LIST = 'SET_TOP_LIST'

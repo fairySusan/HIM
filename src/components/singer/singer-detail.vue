@@ -73,6 +73,7 @@ export default {
         //点击返回按钮事件
         returnClick(){
             this.$router.push('/singer');
+            console.log("runrun");
         }
     },
     computed:{

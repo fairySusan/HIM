@@ -36,13 +36,13 @@
 <template>
   <div class="suggest">
     <ul class="result-wrapper">
-        <li class="result-list" v-for="item in result" :key="item.songid" @click="selectItem(item)">
+        <li class="result-list" v-for="(item,index) in result" :key="item.songid" @click="selectItem(item,index)">
             <div class="icon">
                 <i :class="getIconCls(item)"></i>
             </div>
             <div class="text">
                 <span class="song-name">{{item.songname}}</span>
-                <span class="singer-name" v-html="getDisplayName(item)"></span>
+                <span class="singer-name">{{item.singer}}</span>
             </div>
         </li>
     </ul>
@@ -52,6 +52,8 @@
 import {search} from 'api/search'
 import {ERR_OK} from 'api/config'
 import {filterSinger} from 'common/js/song'
+import {createSong} from 'common/js/song'
+import {mapActions} from 'vuex'
 const TYPE_SINGER = 'singer'
 export default {
     props:{
@@ -74,6 +76,7 @@ export default {
         // this.search();
     },
     methods:{
+        // 查询歌曲
         search(){
             search(this.query,this.page,this.showSinger).then(res => {
                 if (res.code === ERR_OK) {
@@ -83,13 +86,19 @@ export default {
         },
         getResult(data){
             let ret = [];
+            let res = [];
             if(data.zhida && data.zhida.singerid){
                 ret.push({...data.zhida,...{type:TYPE_SINGER}});//对象扩展运算符ES6
             }
             if (data.song) {
                 ret = ret.concat(data.song.list);
             }
-            return ret;
+            ret.forEach((item) =>{
+                if (item.songid && item.albummid) {
+                    res.push(createSong(item));
+                }
+            });
+            return res;
         },
         //根据type的值来显示不同的图标样式
         getIconCls(item){
@@ -99,18 +108,26 @@ export default {
                 return 'icon-music';
             }
         },
-        //处理歌手的数据
-        getDisplayName(item){
-            if (item.type === TYPE_SINGER) {
-                return item.singername;
-            }else{
-                return filterSinger(item.singer);
-            }
-        },
+        // //处理歌手的数据
+        // getDisplayName(item){
+        //     if (item.type === TYPE_SINGER) {
+        //         return item.singername;
+        //     }else{
+        //         return filterSinger(item.singer);
+        //     }
+        // },
         //点击搜索出来的歌曲事件
-        selectItem(item){
-            this.$emit('select', item)
-        }
+        selectItem(item,index){
+            console.log('item',item);
+            this.$emit('select', item,index);
+            this.selectPlay({
+                list:this.result,
+                index:index
+            })
+        },
+        ...mapActions([
+            "selectPlay"
+        ])
     },
     watch:{
         //监听查询参数的改变

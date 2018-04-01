@@ -36,7 +36,7 @@
         <div class="slider">
             <mt-swipe :auto="4000">
                 <mt-swipe-item v-for="item in sliderList" :key="item.id">
-                    <a :href="item.linkUrl"><img :src="item.picUrl" alt="" width="100%" height="100%"></a>
+                    <a href="#"><img :src="item.picUrl" alt="" width="100%" height="100%"></a>
                 </mt-swipe-item>
             </mt-swipe>
         </div>
@@ -59,7 +59,7 @@
      </div>
 </template>
 <script>
-    import { getRecommend } from "api/recommend";
+    import { getRecommend,getHotRecomend } from "api/recommend";
     import {ERR_OK} from 'api/config';
     import Scroll from 'base/scroll'
 export default {
@@ -72,6 +72,7 @@ export default {
     },
     created(){
         this._getRecommend();
+        this._getHotRecomend();
     },
     methods:{
         _getRecommend(){
@@ -83,6 +84,13 @@ export default {
                     }else{
                         console.log("songList数据为空");
                     }
+                }
+            });
+        },
+        _getHotRecomend(){
+            getHotRecomend().then(res => {
+                if(res.code ===  ERR_OK){
+                    console.log(res.data);
                 }
             });
         }
