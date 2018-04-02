@@ -8,9 +8,10 @@
         width:100%;
         .list-wrap{
             max-height:25rem;
-            background: rgba(30,210,45,0.5);
+            background: @themeColor;
             .deleteAll-btn{
                 text-align: right;
+                color:rgba(0,0,0,0.5);
             }
             li:not(.close-btn){
                 height: 30px;
@@ -31,6 +32,7 @@
                 height: 40px;
                 line-height: 40px;
                 text-align: center;
+                color:#fff;
             }
         }
     }
@@ -38,7 +40,7 @@
 <template>
   <div id="playHistoryList">
       <ul class="list-wrap">
-          <li class="deleteAll-btn" @click="deleteAll">全部删除</li>
+          <li class="deleteAll-btn" @click.stop="deleteAll">全部删除</li>
           <li v-for="item in playHisList" :key="item.songid">
               <span class="song-name">{{item.songname}}</span><span class="singer-name grayFont">-{{item.singer}}</span>
               <i class="del-icon fr" @click="deleteFavorite(item)">删除</i>

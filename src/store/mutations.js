@@ -33,6 +33,9 @@ const mutations = {
     },
     [types.SET_PLAY_HIS_LIST](sate,list){
         state.playHisList = list
+    },
+    [types.SET_LIKE_STATE](sate,flag){
+        sate.isLike = flag
     }
 
 }

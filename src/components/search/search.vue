@@ -92,6 +92,7 @@ import {ERR_OK} from 'api/config'
 import Suggest from './suggest'
 import {mapActions} from 'vuex'
 import state from '../../store/state'
+import { Indicator } from 'mint-ui';
 export default {
   components:{
     Suggest
@@ -112,7 +113,9 @@ export default {
     //获取关键词数据
     _getHotKey(){
       getHotKey().then(res =>{
+        // Indicator.open('加载中...');
         if(res.code ===  ERR_OK){
+          // Indicator.close();
           this.hotkey = res.data.hotkey.slice(0,10);//选择前十个数据
         }
       })

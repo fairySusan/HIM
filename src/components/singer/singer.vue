@@ -39,6 +39,7 @@ import { getSingerList } from "api/singer";
 import {ERR_OK} from 'api/config';
 import Singer from 'common/js/singer'
 import {mapMutations} from 'vuex'
+import { Indicator } from 'mint-ui';
 export default {
     data(){
         return{
@@ -50,8 +51,10 @@ export default {
     },
     methods:{
         _getSingerList(){
+            Indicator.open('加载中...');
             getSingerList().then(res=>{
                 if(res.code ===  ERR_OK){
+                    Indicator.close();
                     this.singerList = this.sortSinger(res.data.list);
                 }
             })

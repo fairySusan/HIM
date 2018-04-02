@@ -60,7 +60,7 @@
             </li>
           </ol>
         </div>
-        <span class="go-icon">&gt</span>
+        <span class="go-icon"></span>
       </li>
     </ul>
     <router-view></router-view>
@@ -70,6 +70,7 @@
 import { getRankList } from "api/rank";
 import {ERR_OK} from 'api/config';
 import {mapMutations} from 'vuex'
+import { Indicator } from 'mint-ui';
 
 export default {
   data(){
@@ -83,6 +84,8 @@ export default {
   methods:{
     _getRankList(){
       getRankList().then(res => {
+        // Indicator.open('加载中...');
+        // Indicator.close();
          if(res.code ===  ERR_OK){
             this.rankSongList = res.data;
          }

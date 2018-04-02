@@ -15,7 +15,7 @@
 <transition name="slide">
  <div class="rank-detail">
     <music-list :songList="topSongList" :detailInfo="topInfo">
-        <span class="return-btn" @click="returnClick">&lt</span>
+        <span class="return-icon" @click="returnClick"></span>
     </music-list>
  </div>
 </transition>
@@ -27,6 +27,7 @@ import {getRankDetail} from 'api/rank'
 import {ERR_OK} from 'api/config';
 import {createSong} from 'common/js/song'
 import musicList from '../common/musiclist'
+import { Indicator } from 'mint-ui';
 
 
 export default {
@@ -48,11 +49,13 @@ export default {
     methods:{
         _getRankDetail(){
             getRankDetail(this.topList.id).then(res => {
+                // Indicator.open('加载中...');
                 if (!this.topList.id) {
                     this.$router.push('/rank');
                     return;
                 }
                 if(res.code ===  ERR_OK){
+                    Indicator.close();
                     this.topSongList = this.normalizeSongs(res.songlist);
                     this.topInfo.imgUrl = res.topinfo.pic_album;
                     this.topInfo.title = res.topinfo.ListName;

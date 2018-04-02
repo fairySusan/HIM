@@ -22,3 +22,5 @@ export const currentSong = (state) =>{
 export const favoriteList = state => state.favoriteList
 
 export const playHisList = state => state.playHisList
+
+export const isLike = state => state.isLike

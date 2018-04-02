@@ -14,6 +14,12 @@
                     left:10px;
                     transform: translate(0,-50%);
                 }
+                .title-wrap{
+                    position: absolute;
+                    top:50%;
+                    left:50%;
+                    transform: translate(-50%,-50%);
+                }
                 .singer-name{
                     font-size:10px;
                     -webkit-text-size-adjust: none;
@@ -50,7 +56,14 @@
                    justify-content: center;
                    align-items:center;
                    margin-top:10px;
-                  .playMode-icon,.last-icon,.next-icon,.play-icon,.stop-icon,.like-icon{
+                  .order-icon,
+                  .random-icon,
+                  .last-icon,
+                  .next-icon,
+                  .play-icon,
+                  .stop-icon,
+                  .like-icon,
+                  .nolike-icon{
                       margin:0 15px;
                   }
                }
@@ -105,7 +118,7 @@
     <transition name="normal">
         <div id="screen-player" class="cover" v-if="fullScreen" ref="screenPlayer">
             <div class="des-title">
-                <i class="arrow-icon" @click="clickReturn()">&lt</i>
+                <i class="arrow-icon slide-down" @click="clickReturn()"></i>
                 <div class="title-wrap"> 
                     <span class="song-name">{{currentSong.songname}}</span>
                     <h6 class="singer-name">{{currentSong.singer}}</h6>
@@ -124,11 +137,11 @@
                     <progress-bar :percent="percent"></progress-bar>
                 </div>
                 <div class="tools-btns">
-                    <button class="playMode-icon"></button>
+                    <button :class="playModeClass"></button>
                     <button class="last-icon" @click="playLast"></button>
-                    <button class="play-icon" @click="togglePlaying"></button>
+                    <button v-bind:class="playing ? 'play-icon' : 'stop-icon'" @click="togglePlaying"></button>
                     <button class="next-icon" @click="playNext"></button>
-                    <button class="like-icon" @click="favoriteSong"></button>
+                    <button :class="isLikeClass" @click="favoriteSong"></button>
                 </div>
             </div>
         </div>
@@ -147,7 +160,7 @@
                <span class="singer-name grayFont">{{currentSong.singer}}</span> 
             </div>
             <div class="icon-btn">
-                <button class="state-btn play-icon"></button>
+                <button :class="['state-btn',playing?'play-mini':'stop-mini']" @click.stop="togglePlaying"></button>
                 <button class="list-btn playList-icon" @click.stop="showPlayHis()"></button>
             </div>
         </div>
@@ -172,7 +185,9 @@ export default{
         return{
             percent:null,//播放进度百分比
             currentTime:null,//当前播放的时间
-            isDisplay:false//控制播放历史列表是否可见
+            isDisplay:false,//控制播放历史列表是否可见
+            playModeClass:'order-icon',
+            isLikeClass:'nolike-icon'
         }
     },
     created(){
@@ -255,13 +270,14 @@ export default{
         },
         // 点击收藏按钮收藏这首歌
         favoriteSong(){
-            console.log('click');
             this.saveFavoriteList(this.currentSong);
+            this.setLikeState(!this.isLike);
         },
         ...mapMutations({
             SetFullScreen: 'SET_FULL_SCREEN',
             setPlaying:'SET_PLAYING',
-            setCurrentIndex:'SET_CURRENT_INDEX'
+            setCurrentIndex:'SET_CURRENT_INDEX',
+            setLikeState:'SET_LIKE_STATE'
         }),
         ...mapActions([
             'saveFavoriteList',
@@ -274,7 +290,9 @@ export default{
             'playList',
             'currentSong',
             'playing',
-            'currentIndex'
+            'currentIndex',
+            'mode',
+            'isLike'
         ])
     },
     watch:{
@@ -292,8 +310,20 @@ export default{
         playing(newPlaying){
             const audio = this.$refs.audio;
             this.$nextTick(()=>{
-                newPlaying ? audio.play() : audio.pause()
+                // newPlaying ? audio.play() : audio.pause()
             })
+        },
+        mode(){
+            if (mode === 0) {
+                return this.playModeClass = 'order-icon';
+            }else if(mode === 1){
+                return this.playModeClass = 'loop-icon';
+            }else if(mode === 2){
+                return this.playModeClass = 'random-icon';
+            }
+        },
+        isLike(){
+            this.isLikeClass =  this.isLike ? 'like-icon' : 'nolike-icon';
         }
     }
 }

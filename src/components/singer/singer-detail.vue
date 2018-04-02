@@ -26,6 +26,7 @@ import { getSingerDetail } from "api/singer";
 import {ERR_OK} from 'api/config'
 import {createSong} from 'common/js/song'
 import musicList from '../common/musiclist'
+import { Indicator } from 'mint-ui';
 export default {
     components:{
         musicList
@@ -45,12 +46,14 @@ export default {
     },
     methods:{
         _getSingerDetail(){
+            Indicator.open('加载中...');
             if (!this.singer.id) {
                 this.$router.push('/singer');
                 return;
             }
             getSingerDetail(this.singer.id).then(res =>{
                 if(res.code ===  ERR_OK){
+                     Indicator.close();
                      this.musicData = this.normalizeSongs(res.data.list);
                      this.singerImg = `https://y.gtimg.cn/music/photo_new/T001R300x300M000${res.data.singer_mid}.jpg?max_age=2592000`
                      this.singerInfo.imgUrl = this.singerImg;

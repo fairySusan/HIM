@@ -61,7 +61,8 @@
 <script>
     import { getRecommend,getHotRecomend } from "api/recommend";
     import {ERR_OK} from 'api/config';
-    import Scroll from 'base/scroll'
+    import Scroll from 'base/scroll';
+    import { Indicator } from 'mint-ui';
 export default {
     components:{Scroll},
     data(){
@@ -76,8 +77,10 @@ export default {
     },
     methods:{
         _getRecommend(){
+            Indicator.open('加载中...');
             getRecommend().then(res => {
                 if(res.code ===  ERR_OK){
+                    Indicator.close();
                     this.sliderList = res.data.slider;
                     if (res.data.songList.length>0) {
                         this.songList   = res.data.songList;
@@ -88,7 +91,9 @@ export default {
             });
         },
         _getHotRecomend(){
+            // Indicator.open('加载中...');
             getHotRecomend().then(res => {
+                // Indicator.close();
                 if(res.code ===  ERR_OK){
                     console.log(res.data);
                 }

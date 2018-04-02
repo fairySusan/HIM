@@ -11,7 +11,8 @@ const state = {
     sequenceList:[],//顺序列表
     mode:playMode.sequence,//播放模式默认为顺序播放
     currentIndex:-1,//当前播放歌曲的索引
-    favoriteList:loadFavorite,//
+    favoriteList:loadFavorite,//收藏的歌曲列表
+    isLike:false,//当前这首歌是否被收藏了
     playHisList:[]//历史播放列表
 }
 export default state

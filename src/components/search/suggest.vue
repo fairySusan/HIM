@@ -8,7 +8,6 @@
         .result-wrapper{
             margin:0 10px 0 10px;
             .result-list{
-                background:white;
                 border-bottom:1px solid @underlineColor;
                 padding:5px 10px;
                 .icon-mine:before{
@@ -22,9 +21,10 @@
                     flex-direction: column;
                     justify-content:center;
                     .song-name{
-                        font-size:16px;
+                        font-size:14px;
                     }
                     .singer-name{
+                        font-size:12px;
                         color:#000;
                         opacity:0.5;
                     }
@@ -54,6 +54,7 @@ import {ERR_OK} from 'api/config'
 import {filterSinger} from 'common/js/song'
 import {createSong} from 'common/js/song'
 import {mapActions} from 'vuex'
+import { Indicator } from 'mint-ui';
 const TYPE_SINGER = 'singer'
 export default {
     props:{
@@ -79,7 +80,9 @@ export default {
         // 查询歌曲
         search(){
             search(this.query,this.page,this.showSinger).then(res => {
+                // Indicator.open('加载中...');
                 if (res.code === ERR_OK) {
+                    // Indicator.close();
                    this.result = this.getResult(res.data);
                 }
             })

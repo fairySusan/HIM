@@ -13,7 +13,7 @@
                 text-align:center;
                 font-size:24px;
                 color:white;
-                .return-btn{
+                .return-icon{
                     position:absolute;
                     left:10px;
                 }
