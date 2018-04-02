@@ -1,10 +1,12 @@
 <style lang="less">
+@import '../../assets/less/var.less';
  .rank{
     .rank-ul{
       margin:10px;
       .rank-list{
         display: flex;
         display: -webkit-flex;
+        flex-direction: row;
         align-items:center;
         background:white;
         margin-bottom:10px;
@@ -12,30 +14,31 @@
           flex: 0 0 100px;
         }
         .rank-item{
-          margin-left:1rem;
+          margin-left:10px;
+          width: 7rem;
           .rank-title{
-            font-size:16px;
+            font-size:14px;
+            margin-bottom:10px;
           }
           .song-rank{
             margin: 0;
             padding:0;
             .song-item{
-              display: flex;
-              display: -webkit-flex;
-              justify-content: content;
-              .song-num{
-                // margin:5px;
-              }
+              margin-bottom:3px;
               .song-name{
-                font-size: 14px;
+                font-size: 12px;
                 margin: 0 5px 0 5px;
               }
-              .songer-name,.song-num{
-                color:#000;
-                opacity:0.5;
+              .singer-name,.song-num{
+                color:rgba(0,0,0,.5);
+                font-size:12px;
               }
             }
           }
+        }
+        .go-icon{
+          position: absolute;
+          right:20px;
         }
       }
     }
@@ -53,10 +56,11 @@
             <li class="song-item ellipsis" v-for="(song,index) in listItem.songList" :key="song.songname">
               <span class="song-num">{{index+1}}</span>
                 <span class="song-name">{{song.songname}}</span>
-                <span class="songer-name"> - {{song.singername}}</span>
+                <span class="singer-name"> - {{song.singername}}</span>
             </li>
           </ol>
         </div>
+        <span class="go-icon">&gt</span>
       </li>
     </ul>
     <router-view></router-view>

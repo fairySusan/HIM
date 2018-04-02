@@ -1,10 +1,17 @@
 <style lang="less">
+@import '../../assets/less/var.less';
     .singer{
-        .singer-poto{
-            flex: 0 0 40px;
-            margin:0 0.6rem; 
-            img{
-                border-radius: 50%;
+       .mint-cell{
+            .mint-cell-value{
+                font-size:@baseFontSize;
+                color:@grayFont;
+                .singer-poto{
+                    flex: 0 0 40px;
+                    margin:0 0.6rem; 
+                    img{
+                        border-radius: 50%;
+                    }
+                }
             }
         }
     }
@@ -14,14 +21,12 @@
     <div class="singer">
         <mt-index-list>
             <mt-index-section v-for="itemList in singerList" :key="itemList.title" :index="itemList.title">
-                <div v-for="item in itemList.items" :key="item.id" @click="clickSingerItem(item)">
-                    <mt-cell>
-                        <div class="singer-poto">
-                            <img  :src="item.poto" alt="" width="100%" height="100%">
-                        </div>
-                        <span>{{item.name}}</span>
-                    </mt-cell>
-                </div>
+                <mt-cell v-for="item in itemList.items" :key="item.id" @click="clickSingerItem(item)">
+                    <div class="singer-poto">
+                        <img  :src="item.poto" alt="" width="100%" height="100%">
+                    </div>
+                    <p>{{item.name}}</p>
+                </mt-cell>
             </mt-index-section>
         </mt-index-list>
         <router-view></router-view>

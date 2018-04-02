@@ -3,14 +3,20 @@
 
 </style>
 <template>
-  <div class="navBar">
-    <router-link to="/recommend">
-        <span class="nav-btn">首页</span>
-    </router-link>
-    <router-link to="/singer"><span class="nav-btn">歌手</span></router-link>
-    <router-link to="/rank"><span class="nav-btn">排行</span></router-link>
-    <router-link to="/search"><span class="nav-btn">搜索</span></router-link>
-  </div>
+  <ul class="navBar">
+    <li>
+      <router-link to="/recommend">首页</router-link>
+    </li>
+    <li>
+      <router-link to="/singer">歌手</router-link>
+    </li>
+    <li>
+      <router-link to="/rank">排行</router-link>
+    </li>
+    <li>
+      <router-link to="/search">搜索</router-link>
+    </li>
+  </ul>
 </template>
 <script>
 export default {

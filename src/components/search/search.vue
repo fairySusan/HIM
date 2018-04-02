@@ -2,6 +2,11 @@
 @import '../../assets/less/var.less';
   .search{
     position: relative;
+    .mint-search{
+      .mint-searchbar-cancel{
+        color:#fff;
+      }
+    }
     .float-panel{
       position: absolute;
       top: 10%;
@@ -9,16 +14,18 @@
       .hot-search-tag{
         .title{
           padding-left: 10px;
+          color:rgba(0,0,0,.5);
+          font-size:12px;
         }
         .tag-wrap{
           font-size: 0;
           .name-tag{
-          font-size:14px;
+          font-size:12px;
           background:@themeColor;
           color:white;
           border-radius: 99px;
           display: inline-block;
-          padding:8px 10px;
+          padding:5px 10px;
           margin:5px;
           }
         }

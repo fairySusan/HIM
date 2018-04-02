@@ -2,7 +2,7 @@
 @import '../../assets/less/var.less';
  .recommend{
     .slider{
-        height: 12rem;
+        height: 6rem;
     }
     .recommend-special{
         margin-top:10px;
@@ -10,7 +10,7 @@
             text-align: center;
         }
         .recommend-list{
-            height: 5rem;
+            height: 1.2rem;
             border-bottom:1px solid #666;
             display:flex;
             display: -webkit-flex;
@@ -18,7 +18,7 @@
             align-items:center;
             .item-img{
                 flex: 0 0 60px;
-                margin:0 0.6rem;                
+                margin:0 10rem;                
             }
             .description-text{
                 display: flex;
