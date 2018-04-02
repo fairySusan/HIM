@@ -2,6 +2,24 @@
 @import '../../assets/less/var.less';
     .player{
         #screen-player{
+            .blurBack{
+                width:100%;
+                height:100%;
+                background: url('../../assets/img/02.jpg');
+                background-size:cover;
+                position: absolute;
+                z-index:-1;
+                top:0;
+                left:0;
+                bottom:0;
+                right:0;
+                content:'';
+                -webkit-filter:blur(5px);
+                filter:blur(15px);
+            }
+            &:before{
+                
+            }
             .des-title{
                 position: relative;
                 text-align:center;
@@ -31,6 +49,7 @@
                 margin-top:15%;
                 img{
                     border-radius:50%;
+                    border:10px solid rgba(0,0,0,.4);
                 }
             }
             .play-time{
@@ -116,7 +135,8 @@
     <div class="player clearfix" v-if="playList.length>0">
 <!-- 全屏的播放器 -->
     <transition name="normal">
-        <div id="screen-player" class="cover" v-if="fullScreen" ref="screenPlayer">
+        <div id="screen-player" class="cover"  v-if="fullScreen" ref="screenPlayer">
+            <img class="blurBack cover" :src="currentSong.img" alt="">
             <div class="des-title">
                 <i class="arrow-icon slide-down" @click="clickReturn()"></i>
                 <div class="title-wrap"> 
@@ -125,7 +145,7 @@
                 </div>
             </div>
             <div class="lyric-img" ref="lyricImg">
-                <img :src="currentSong.img" alt="专辑封面">
+                <img :src="currentSong.img" alt="专辑封面" width="80%" height="80%">
             </div>
             
             <!-- 下面的工具栏 -->
@@ -191,7 +211,6 @@ export default{
         }
     },
     created(){
-
     },
     methods:{
         //点击返回按钮隐藏全屏播放器
