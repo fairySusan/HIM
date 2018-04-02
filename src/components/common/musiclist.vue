@@ -19,16 +19,15 @@
                 }
             }
             .singer-img{
-                height:22rem;
+                height:9rem;
                 overflow:hidden;
             }
         }
         .songs-list{
             margin:20px;
             .song-item{
-                background:white;
+                background:#fff;
                 padding:5px 0;
-                margin-bottom:10px;
                 border-bottom:1px solid @underlineColor;
                 .des-text{
                     font-size:12px;

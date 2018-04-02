@@ -2,13 +2,21 @@
 @import '../../assets/less/var.less';
     .player{
         #screen-player{
-            .arrow-icon{
-                position: absolute;
-                left:10px;
-            }
             .des-title{
+                position: relative;
                 text-align:center;
-                .song-name,.singer-name{
+                height: 1.5rem;
+                background-color:@themeColor;
+                color:#fff;
+                .arrow-icon{
+                    position: absolute;
+                    top:50%;
+                    left:10px;
+                    transform: translate(0,-50%);
+                }
+                .singer-name{
+                    font-size:10px;
+                    -webkit-text-size-adjust: none;
                 }
             }
             
@@ -19,6 +27,14 @@
                     border-radius:50%;
                 }
             }
+            .play-time{
+                position: fixed;
+                bottom:2.5rem;
+                left:50%;
+                transform: translate(-50%,0);
+                font-size:10px;
+                color:rgba(0,0,0,.5);
+            }
            .tools-bar{
                position: fixed;
                bottom: 0;
@@ -26,12 +42,14 @@
                right:0;
                margin:auto;
                width:90%;
+               height:2.5rem;
                .tools-btns{
                    display: flex;
                    display: -webkit-flex;
                    flex-direction: row;
                    justify-content: center;
                    align-items:center;
+                   margin-top:10px;
                   .playMode-icon,.last-icon,.next-icon,.play-icon,.stop-icon,.like-icon{
                       margin:0 15px;
                   }
@@ -86,21 +104,24 @@
 <!-- 全屏的播放器 -->
     <transition name="normal">
         <div id="screen-player" class="cover" v-if="fullScreen" ref="screenPlayer">
-            <i class="arrow-icon" @click="clickReturn()">&lt</i>
             <div class="des-title">
-                <span class="song-name">{{currentSong.songname}}</span>
-                <h6 class="singer-name">{{currentSong.singer}}</h6>
+                <i class="arrow-icon" @click="clickReturn()">&lt</i>
+                <div class="title-wrap"> 
+                    <span class="song-name">{{currentSong.songname}}</span>
+                    <h6 class="singer-name">{{currentSong.singer}}</h6>
+                </div>
             </div>
             <div class="lyric-img" ref="lyricImg">
                 <img :src="currentSong.img" alt="专辑封面">
             </div>
             
             <!-- 下面的工具栏 -->
+            <div class="play-time">
+                <span>00:19/03:23</span>
+            </div>
             <div class="tools-bar">
                 <div>
-                    <span class="play-time"></span>
                     <progress-bar :percent="percent"></progress-bar>
-                    <span class="total-time"></span>
                 </div>
                 <div class="tools-btns">
                     <button class="playMode-icon"></button>
