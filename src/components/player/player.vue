@@ -17,9 +17,6 @@
                 -webkit-filter:blur(5px);
                 filter:blur(15px);
             }
-            &:before{
-                
-            }
             .des-title{
                 position: relative;
                 text-align:center;
@@ -47,6 +44,7 @@
             .lyric-img{
                 text-align:center;
                 margin-top:15%;
+                animation: rotate-animation 10s infinite linear;
                 img{
                     border-radius:50%;
                     border:10px solid rgba(0,0,0,.4);
@@ -99,10 +97,13 @@
             .minilyric-img{
                 width:50px;
                 height:50px;
-                margin-left:10px;
                 position: absolute;
-                top:50%;
-                transform: translate(0,-50%);
+                top:0;
+                right:0;
+                left:0;
+                bottom:0;
+                margin:auto 10px;
+                animation: rotate-animation 10s infinite linear;
                 img{
                     vertical-align: middle;
                     border-radius: 50%;
@@ -144,7 +145,7 @@
                     <h6 class="singer-name">{{currentSong.singer}}</h6>
                 </div>
             </div>
-            <div class="lyric-img" ref="lyricImg">
+            <div class="lyric-img" ref="lyricImg" :style="{animationPlayState:isRotate}">
                 <img :src="currentSong.img" alt="专辑封面" width="80%" height="80%">
             </div>
             
@@ -172,7 +173,7 @@
         <div id="mini-player" v-if="!fullScreen" @click="clickMini">
             <!-- 播放历史列表 -->
             <played-list v-show="isDisplay" @close="closePlayHis()"></played-list>
-            <div class="minilyric-img fl">
+            <div class="minilyric-img fl" ref="lyricImg" :style="{animationPlayState:isRotate}">
                 <img :src="currentSong.img" alt="专辑封面" width="100%" height="100%">
             </div>
             <div class="text fl">
@@ -207,7 +208,8 @@ export default{
             currentTime:null,//当前播放的时间
             isDisplay:false,//控制播放历史列表是否可见
             playModeClass:'order-icon',
-            isLikeClass:'nolike-icon'
+            isLikeClass:'nolike-icon',
+            isRotate:''//专辑封面是否旋转
         }
     },
     created(){
@@ -327,9 +329,12 @@ export default{
         },
         //监听playing控制音乐播放还是暂停
         playing(newPlaying){
-            const audio = this.$refs.audio;
             this.$nextTick(()=>{
+                const audio = this.$refs.audio;
+                const lyricImg = this.$refs.lyricImg;
                 // newPlaying ? audio.play() : audio.pause()
+                //监听播放还是停止，来控制专辑封面是否旋转
+                this.isRotate = newPlaying?'running':'paused';
             })
         },
         mode(){
