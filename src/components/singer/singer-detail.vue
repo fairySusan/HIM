@@ -15,7 +15,7 @@
     <transition name="slide">
         <div class="singer-detail">
             <music-list :songList="musicData" :detailInfo="singerInfo">
-                <span class="return-btn" @click="returnClick">&lt</span>
+                <span class="return-icon" @click="returnClick"></span>
             </music-list>
         </div>
     </transition>

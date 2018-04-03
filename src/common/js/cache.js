@@ -5,13 +5,14 @@ const SEARCH_KEY = '_search_'
 const SEARCH_MAX_LENGTH = 15//数组最多可以放入15条数据
 const FAVORITE_KEY = '_favorite_'
 const FAVORITE_MAX_LENGTH = 200
-const PLAYHIS_KEY = '_history_'
+const PLAYHIS_KEY = '_history_'//历史播放列表键值
 const PLAYHIS_MAX_LENGTH = 100
 
  /* 先查找历史数组中有没有这个元素，有的话就把它提到第一个，没有的话就从头部插入进去，
  若数组长度满，就删掉最后一个 */
 
 function insertArray(arr,val,compare,maxLen){
+    console.log(arr);
     const index = arr.findIndex(compare);//findIndex是es6的函数，查找数组中是否有这个元素
     if(index === 0){
         return 
@@ -83,7 +84,7 @@ export function deleteFavorite(song){
 }
 // 加载收藏的歌曲
 export function loadFavorite(){
-    return storage.get(FAVORITE_KEY);
+    return storage.get(FAVORITE_KEY,[]);
 }
 // 保存播放过的歌曲
 export function savePlayHis(song){
@@ -91,7 +92,7 @@ export function savePlayHis(song){
     insertArray(songs,song,(item)=>{
         return song.songid === item.songid;
     },PLAYHIS_MAX_LENGTH);
-    storage.set(PLAYHIS_KEY,song);
+    storage.set(PLAYHIS_KEY,songs);
     return songs;
 }
 
@@ -108,4 +109,8 @@ export function deletePlayHis(song){
         storage.set(PLAYHIS_KEY,songs)
         return songs
     }
+}
+// 加载播放过的歌曲
+export function loadPlayHis(){
+    return storage.get(PLAYHIS_KEY,[]);
 }

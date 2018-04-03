@@ -31,11 +31,11 @@ const mutations = {
     [types.SET_FAVORITE_LIST](state,list) {
         state.favoriteList = list
     },
-    [types.SET_PLAY_HIS_LIST](sate,list){
+    [types.SET_PLAY_HIS_LIST](state,list){
         state.playHisList = list
     },
-    [types.SET_LIKE_STATE](sate,flag){
-        sate.isLike = flag
+    [types.SET_LIKE_STATE](state,flag){
+        state.isLike = flag
     }
 
 }

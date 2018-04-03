@@ -317,12 +317,13 @@ export default{
         ])
     },
     watch:{
-        currentSong(){
+        currentSong(newCurrentSong){
             this.$nextTick(()=>{
                 this.currentTime = this.$refs.audio.currentTime;
                 this.$refs.audio.play();
-                this.savePlayHisList(this.currentSong);
-            }) 
+                console.log("wohahahhah");
+            });
+            this.savePlayHisList(newCurrentSong);
         },
         percent(){
             return this.currentTime/this.currentSong.duration;

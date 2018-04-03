@@ -1,16 +1,20 @@
 // 用户中心页面
 <style lang="less">
 @import '../../assets/less/var.less';
-    #user-center{
+    #user-center {
         header{
             position: relative;
-            height: 2.5rem;
-            line-height: 2.5rem;
-            background:pink;
+            height: 2rem;
+            line-height: 2rem;
+            background:@themeColor;
             text-align: center;
             .return-btn{
                 position: absolute;
                 left: 10px;
+                right:0;
+                top:0;
+                bottom:0;
+                margin:auto 0;
             }
             .toggle-btn{
                 font-size:0;
@@ -18,6 +22,15 @@
                 button{
                     font-size:14px;
                     padding:3px 12px;
+                    background:transparent;
+                    border:1px solid rgba(120, 120, 120, 0.2);
+                    color:rgba(0,0,0,.5);
+                    border-radius: 3px;
+                    &.active{
+                        color:#fff;
+                        background:linear-gradient(@themeColor,rgb(156,140,207));
+                        background:-webkit-linear-gradient(@themeColor,rgb(156,140,207));
+                    }
                 }
             }
         }
@@ -36,14 +49,14 @@
 <template>
   <div id="user-center">
       <header>
-          <i class="return-btn" @click="clickBack">&lt</i>
+          <i class="return-btn return-icon" @click="clickBack"></i>
           <div class="toggle-btn">
-              <button>我 喜 欢 的</button>
-              <button>最 近 听 的</button>
+              <button :class="{'active':isShowPanel}" @click="showPanel(true)">我 喜 欢 的</button>
+              <button :class="{'active':!isShowPanel}" @click="showPanel(false)">最 近 听 的</button>
           </div>
       </header>
       <!-- 我喜欢的音乐 -->
-      <div>
+      <div v-show="isShowPanel">
           <ul class="list-wrap">
               <li v-for="item in favoriteList" :key="item.songid">
                   <h6 class="songname">{{item.songname}}</h6>
@@ -52,7 +65,7 @@
           </ul>
       </div>
       <!-- 我最近听的音乐 -->
-      <div>
+      <div v-show="!isShowPanel">
           <ul class="list-wrap">
               <li v-for="item in playHisList" :key="item.songid">
                   <h6 class="songname">{{item.songname}}</h6>
@@ -67,12 +80,15 @@ import { mapMutations ,mapActions,mapState,mapGetters} from "vuex";
 export default {
   data(){
       return{
-
+          isShowPanel:true
       }
   },
   methods:{
     clickBack(){
         this.$router.push('/recommend');
+    },
+    showPanel(flag){
+        this.isShowPanel = flag;
     }
   },
   computed:{
