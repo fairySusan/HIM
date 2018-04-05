@@ -5,7 +5,6 @@
             .blurBack{
                 width:100%;
                 height:100%;
-                background: url('../../assets/img/02.jpg');
                 background-size:cover;
                 position: absolute;
                 z-index:-1;

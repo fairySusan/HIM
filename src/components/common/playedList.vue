@@ -47,7 +47,7 @@
           <li class="deleteAll-btn" @click.stop="deleteAll">全部删除</li>
           <li v-for="item in playHisList" :key="item.songid">
               <span class="song-name">{{item.songname}}</span><span class="singer-name grayFont">-{{item.singer}}</span>
-              <i class="garbage-icon" @click="deleteFavorite(item)"></i>
+              <i class="garbage-icon" @click.stop="deleteFavorite(item)"></i>
           </li>
           <li class="close-btn" @click.stop="close()">
               <span>关闭</span>

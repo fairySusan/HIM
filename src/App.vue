@@ -1,14 +1,4 @@
 <style lang="less">
- .app{
-  .userPoto{
-    width: 30px;
-    height: 30px;
-    border-radius:50%;
-  }
-  .userName{
-    color:white;
-  }
- }
 </style>
 
 <template>
@@ -20,6 +10,9 @@
           <span class="userName">fairySusan</span>
         </router-link>
       </div>
+      <router-link to="/login">
+        <i class="user-login user-icon"></i>
+      </router-link>
     </div>
     <nav-bar></nav-bar>
     <div class="content clearfix">

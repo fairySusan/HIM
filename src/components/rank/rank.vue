@@ -46,9 +46,10 @@
     
 </style>
 <template>
-  <div class="rank">
+<scroll  :data="rankSongList" :pullup="pullup">
+  <div class="rank" ref="rank">
     <ul class="rank-ul">
-      <li class="rank-list"  v-for="listItem in rankSongList.topList" :key="listItem.id" @click="clickRankItem(listItem)">
+      <li class="rank-list"  v-for="listItem in rankSongList" :key="listItem.id" @click="clickRankItem(listItem)">
         <div class="rank-img"><img :src="listItem.picUrl" alt="专辑图片" width="100%" height="100%"></div>
         <div class="rank-item">
           <h6 class="rank-title">{{listItem.topTitle}}</h6>
@@ -65,17 +66,22 @@
     </ul>
     <router-view></router-view>
   </div>
+</scroll>
 </template>
 <script>
 import { getRankList } from "api/rank";
 import {ERR_OK} from 'api/config';
 import {mapMutations} from 'vuex'
+import BScroll from 'better-scroll'
 import { Indicator } from 'mint-ui';
+import Scroll from 'base/scroll';
 
 export default {
+  components:{Scroll},
   data(){
     return{
-      rankSongList:[]
+      rankSongList:[],
+      pullup:true
     }
   },
   created(){
@@ -87,7 +93,7 @@ export default {
         // Indicator.open('加载中...');
         // Indicator.close();
          if(res.code ===  ERR_OK){
-            this.rankSongList = res.data;
+            this.rankSongList = res.data.topList;
          }
       })
     },

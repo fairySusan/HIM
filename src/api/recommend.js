@@ -1,5 +1,6 @@
 import jsonp from '../common/js/jsonp'
 import {commonParams,options} from './config'
+import axios from 'axios'
 export  function getRecommend(){
     const url = 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg';
     const data = Object.assign({},commonParams,{
@@ -10,12 +11,21 @@ export  function getRecommend(){
     return jsonp(url,data,options);
 }
 export function getHotRecomend(){
-    const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
+    const url = '/api/getHotRecomend';
     const data = Object.assign({},commonParams,{
         platform:'yqq',
         uin:0,
         needNewCode:1,
-        hostUin: 0
+        hostUin: 0,
+        rnd:Math.random(),
+        categoryId:10000000,
+        sin:0,
+        sortId:5,
+        format:'json'
     })
-    return jsonp(url,data,options);
+    return axios.get('/getHotRecomend',{
+        params:data
+    }).then(res=>{
+        return Promise.resolve(res.data)
+    });
 }

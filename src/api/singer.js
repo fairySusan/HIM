@@ -1,6 +1,7 @@
 // 得到歌手页面数据的api
 import jsonp from '../common/js/jsonp'
 import {commonParams,options} from './config'
+import axios from 'axios'
 export function getSingerList(){
     const url = 'https://shc.y.qq.com/v8/fcg-bin/v8.fcg';
     const data = Object.assign({},commonParams,{
@@ -27,6 +28,14 @@ export function getSingerDetail(singermid){
         num:100,
         songstatus:1,
         singermid:singermid
+    })
+    return jsonp(url,data,options);
+}
+export function getVKey(){
+    const url = 'http://c.y.qq.com/base/fcgi-bin/fcg_musicexpress.fcg'
+    const data = Object.assign({},commonParams,{
+        json:3,
+        guid:3037970042
     })
     return jsonp(url,data,options);
 }

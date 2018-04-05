@@ -22,7 +22,7 @@
 </template>
 <script>
 import {mapGetters} from 'vuex';
-import { getSingerDetail } from "api/singer";
+import { getSingerDetail,getVKey } from "api/singer";
 import {ERR_OK} from 'api/config'
 import {createSong} from 'common/js/song'
 import musicList from '../common/musiclist'
@@ -38,14 +38,15 @@ export default {
             singerInfo:{
                 imgUrl:'',
                 title:''
-            }
+            },
+            key:''
         }
     },
     created(){
-        this._getSingerDetail();
+        this._getVKey();
     },
     methods:{
-        _getSingerDetail(){
+        _getSingerDetail(key){
             Indicator.open('加载中...');
             if (!this.singer.id) {
                 this.$router.push('/singer');
@@ -53,22 +54,28 @@ export default {
             }
             getSingerDetail(this.singer.id).then(res =>{
                 if(res.code ===  ERR_OK){
-                     Indicator.close();
-                     this.musicData = this.normalizeSongs(res.data.list);
-                     this.singerImg = `https://y.gtimg.cn/music/photo_new/T001R300x300M000${res.data.singer_mid}.jpg?max_age=2592000`
-                     this.singerInfo.imgUrl = this.singerImg;
-                     this.singerInfo.title = res.data.singer_name;
-                     console.log(this.singerInfo);
+                    Indicator.close();
+                    this.musicData = this.normalizeSongs(res.data.list,key);
+                    this.singerImg = `https://y.gtimg.cn/music/photo_new/T001R300x300M000${res.data.singer_mid}.jpg?max_age=2592000`
+                    this.singerInfo.imgUrl = this.singerImg;
+                    this.singerInfo.title = res.data.singer_name;
+                    console.log(this.singerInfo);
                 }
             })
         },
+        _getVKey(){
+            getVKey().then(res=>{
+                this.key = res.key;
+                this._getSingerDetail(res.key);
+            })
+        },
         //处理获得的歌手详情数据
-        normalizeSongs(list){
+        normalizeSongs(list,key){
             let ret = [];
             list.forEach((item) =>{
                 let musicDataItem = item.musicData;
                 if (musicDataItem.songid && musicDataItem.albummid) {
-                    ret.push(createSong(musicDataItem));
+                    ret.push(createSong(musicDataItem,key));
                 }
             });
             return ret;
@@ -76,7 +83,6 @@ export default {
         //点击返回按钮事件
         returnClick(){
             this.$router.push('/singer');
-            console.log("runrun");
         }
     },
     computed:{

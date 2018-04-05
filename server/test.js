@@ -1,0 +1,29 @@
+module.exports = {
+    slider:[
+        {
+            id:15014,
+            linkUrl:"",
+            picUrl:""
+        },
+        {
+            id:15024,
+            linkUrl:"",
+            picUrl:""
+        },
+        {
+            id:15043,
+            linkUrl:"",
+            picUrl:""
+        },
+        {
+            id:15045,
+            linkUrl:"",
+            picUrl:""
+        },
+        {
+            id:15026,
+            linkUrl:"",
+            picUrl:""
+        }
+    ]
+}

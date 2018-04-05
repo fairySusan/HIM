@@ -30,8 +30,8 @@
  }
 </style>
 <template>
+<scroll  :data="songList" :pullup="pullup">
     <div class="recommend">
-    <scroll  :data="sliderList">
         <!-- 轮播图 -->
         <div class="slider">
             <mt-swipe :auto="4000">
@@ -55,29 +55,31 @@
                 </li>
             </ul>
         </div>
-    </scroll>
      </div>
+     </scroll>
 </template>
 <script>
-    import { getRecommend,getHotRecomend } from "api/recommend";
+    // import {getHotRecomend} from "api/recommend";
     import {ERR_OK} from 'api/config';
     import Scroll from 'base/scroll';
     import { Indicator } from 'mint-ui';
+    import {getRecommend,getHotRecommend} from 'api/index'
 export default {
     components:{Scroll},
     data(){
         return{
             sliderList:[],
-            songList:[]
+            songList:[],
+            pullup:true
         }
     },
     created(){
         this._getRecommend();
-        this._getHotRecomend();
+        this._getHotRecommend();
     },
     methods:{
         _getRecommend(){
-            Indicator.open('加载中...');
+            // Indicator.open('加载中...');
             getRecommend().then(res => {
                 if(res.code ===  ERR_OK){
                     Indicator.close();
@@ -85,17 +87,18 @@ export default {
                     if (res.data.songList.length>0) {
                         this.songList   = res.data.songList;
                     }else{
-                        console.log("songList数据为空");
+                        
                     }
                 }
+                console.log("songList数据为空");
             });
         },
-        _getHotRecomend(){
+        _getHotRecommend(){
             // Indicator.open('加载中...');
-            getHotRecomend().then(res => {
+            getHotRecommend().then(res => {
                 // Indicator.close();
                 if(res.code ===  ERR_OK){
-                    console.log(res.data);
+                    console.log('热门专辑',res.data);
                 }
             });
         }

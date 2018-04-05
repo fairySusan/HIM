@@ -124,8 +124,26 @@ table {
     height:1.3rem;
     line-height:1.3rem;
     background: @themeColor;
+    position: relative;
     .user-info{
         text-align: center;
+        .userPoto{
+            width: 30px;
+            height: 30px;
+        border-radius:50%;
+        }
+        .userName{
+        color:white;
+        }
+    }
+    .user-login{
+        position: absolute;
+        right:0;
+        top:0;
+        left:0;
+        bottom:0;
+        margin:auto;
+        margin-right:10px;
     }
 }
 .navBar{

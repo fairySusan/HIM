@@ -11,7 +11,7 @@ export default class Song{
 
   }
 }
-export function createSong(musicDataItem){
+export function createSong(musicDataItem,key){
   return new Song({
     songid:musicDataItem.songid,//歌曲id
     albummid:musicDataItem.albummid,//专辑id
@@ -20,7 +20,7 @@ export function createSong(musicDataItem){
     albumname: musicDataItem.albumname,//专辑名
     duration: musicDataItem.interval,//歌曲时长
     img: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicDataItem.albummid}.jpg?max_age=2592000`,
-    url:'http://dl.stream.qqmusic.qq.com/C400001Qu4I30eVFYb.m4a?vkey=0F395B5B5E7322262E6FA4D5CF2DF7DAE477633E952E646A2382834650C5DB778B7550F5B1609141C35BCCE1337469B01EE4C64C2F573C29&guid=3037970042&uin=0&fromtag=66'
+    url:'http://dl.stream.qqmusic.qq.com/C400001Qu4I30eVFYb.m4a?vkey='+key+'&guid=3037970042&uin=0&fromtag=66'
   })
 }
 //一首歌有多个演唱者，连接演唱者的字符串
