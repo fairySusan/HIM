@@ -1,4 +1,5 @@
-module.exports = {
+{
+    code:0
     slider:[
         {
             id:15014,

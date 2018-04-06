@@ -92,7 +92,7 @@ export default {
       getRankList().then(res => {
         // Indicator.open('加载中...');
         // Indicator.close();
-         if(res.code ===  ERR_OK){
+         if(res.code ===  0){
             this.rankSongList = res.data.topList;
          }
       })

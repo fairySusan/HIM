@@ -114,7 +114,7 @@ export default {
     _getHotKey(){
       getHotKey().then(res =>{
         // Indicator.open('加载中...');
-        if(res.code ===  ERR_OK){
+        if(res.code === 0){
           // Indicator.close();
           this.hotkey = res.data.hotkey.slice(0,10);//选择前十个数据
         }

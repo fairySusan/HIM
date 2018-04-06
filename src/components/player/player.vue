@@ -332,7 +332,7 @@ export default{
             this.$nextTick(()=>{
                 const audio = this.$refs.audio;
                 const lyricImg = this.$refs.lyricImg;
-                // newPlaying ? audio.play() : audio.pause()
+                newPlaying ? audio.play() : audio.pause()
                 //监听播放还是停止，来控制专辑封面是否旋转
                 this.isRotate = newPlaying?'running':'paused';
             })

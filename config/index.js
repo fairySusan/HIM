@@ -23,6 +23,20 @@ module.exports = {
         pathRewrite: {
           '^/getHotRecommend': '/getHotRecommend'
         }
+      },
+      '/getSingerList': {
+        target: 'http://127.0.0.1:8081',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/getSingerList': '/getSingerList'
+        }
+      },
+      '/getSingerDetail': {
+        target: 'http://127.0.0.1:8081',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/getSingerDetail': '/getSingerDetail'
+        }
       }
     },
 

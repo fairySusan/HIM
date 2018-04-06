@@ -22,7 +22,8 @@
 </template>
 <script>
 import {mapGetters} from 'vuex';
-import { getSingerDetail,getVKey } from "api/singer";
+// import { getSingerDetail,getVKey } from "api/singer";
+import {getSingerDetail} from 'api/index'
 import {ERR_OK} from 'api/config'
 import {createSong} from 'common/js/song'
 import musicList from '../common/musiclist'
@@ -43,18 +44,21 @@ export default {
         }
     },
     created(){
-        this._getVKey();
+        // this._getVKey();
+         this._getSingerDetail();
+         
     },
     methods:{
-        _getSingerDetail(key){
-            Indicator.open('加载中...');
+        _getSingerDetail(){
+            // Indicator.open('加载中...');
             if (!this.singer.id) {
                 this.$router.push('/singer');
                 return;
             }
+            console.log("vvv",this.singer.id);
             getSingerDetail(this.singer.id).then(res =>{
-                if(res.code ===  ERR_OK){
-                    Indicator.close();
+                if(res.data.code ===  0){
+                    // Indicator.close();
                     this.musicData = this.normalizeSongs(res.data.list,key);
                     this.singerImg = `https://y.gtimg.cn/music/photo_new/T001R300x300M000${res.data.singer_mid}.jpg?max_age=2592000`
                     this.singerInfo.imgUrl = this.singerImg;

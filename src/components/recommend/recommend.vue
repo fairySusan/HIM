@@ -9,21 +9,27 @@
         .recommend-title{
             text-align: center;
         }
+        ul{
+            width:90%;
+            margin:0 auto;
+        }
         .recommend-list{
-            height: 1.2rem;
-            border-bottom:1px solid #666;
+            
+            border-bottom:1px solid @underlineColor;
             display:flex;
             display: -webkit-flex;
             box-sizing: border-box;
-            align-items:center;
+            padding:5px 0;
             .item-img{
                 flex: 0 0 60px;
-                margin:0 10rem;                
             }
             .description-text{
                 display: flex;
                 flex-direction: column;
                 justify-content:center;
+                .singername{
+                    font-size:12px;
+                }
             }
         } 
     }
@@ -42,15 +48,15 @@
         </div>
         <!-- 推荐专辑列表 -->
         <div class="recommend-special">
-            <div class="recommend-title">热门专辑推荐</div>
+            <div class="recommend-title">今日推荐</div>
             <ul>
-                <li class="recommend-list" v-for="item in songList" :key="item.id">
+                <li class="recommend-list" v-for="(item,index) in songList" :key="item.id" @click.stop="clickSong(item,index)">
                     <div class="item-img">
-                        <img :src="item.picUrl" alt="专辑封面"  width="100%" height="100%">
+                        <img :src="item.img" alt="专辑封面"  width="80%" height="80%">
                     </div>
                     <div class="description-text">
-                        <p v-html="item.songListDesc"></p>
-                        <h4 v-html="item.songListAuthor"></h4>
+                        <p v-html="item.songname"></p>
+                        <h4 v-html="item.singer" class="grayFont singername"></h4>
                     </div>
                 </li>
             </ul>
@@ -64,6 +70,11 @@
     import Scroll from 'base/scroll';
     import { Indicator } from 'mint-ui';
     import {getRecommend,getHotRecommend} from 'api/index'
+    import {createSong} from 'common/js/song'
+    import {filterSinger} from 'common/js/song'
+    import {mapActions} from 'vuex'
+
+    const TYPE_SINGER = 'single'//单人演唱
 export default {
     components:{Scroll},
     data(){
@@ -79,29 +90,37 @@ export default {
     },
     methods:{
         _getRecommend(){
-            // Indicator.open('加载中...');
             getRecommend().then(res => {
-                if(res.code ===  ERR_OK){
-                    Indicator.close();
+                if(res.data.code ===  ERR_OK){
                     this.sliderList = res.data.slider;
-                    if (res.data.songList.length>0) {
-                        this.songList   = res.data.songList;
-                    }else{
-                        
-                    }
                 }
-                console.log("songList数据为空");
             });
         },
         _getHotRecommend(){
-            // Indicator.open('加载中...');
             getHotRecommend().then(res => {
-                // Indicator.close();
-                if(res.code ===  ERR_OK){
-                    console.log('热门专辑',res.data);
+               if (res.data.code ===  ERR_OK) {
+                 this.songList = this.normalizeNewSong(res.data.newsonglist);
+               }
+            });
+        },
+        normalizeNewSong(list){
+            let ret = [];
+            list.forEach(element => {
+                if (element.songid){
+                    ret.push(createSong(element));
                 }
             });
-        }
+            return ret;
+        },
+        clickSong(item,index){
+            this.selectPlay({
+                list:this.songList,
+                index:index
+            })
+        },
+         ...mapActions([
+            "selectPlay"
+        ])
     }
 }
 </script>

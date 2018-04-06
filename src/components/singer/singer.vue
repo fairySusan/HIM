@@ -2,6 +2,9 @@
 @import '../../assets/less/var.less';
     .singer{
        .mint-cell{
+           .mint-cell-title{
+               flex:none;
+           }
             .mint-cell-value{
                 font-size:@baseFontSize;
                 color:@grayFont;
@@ -21,7 +24,7 @@
     <div class="singer">
         <mt-index-list>
             <mt-index-section v-for="itemList in singerList" :key="itemList.title" :index="itemList.title">
-                <div v-for="item in itemList.items" :key="item.id" @click="clickSingerItem(item)">
+                <div v-for="item in itemList.items" :key="item.name" @click="clickSingerItem(item)">
                     <mt-cell>
                         <div class="singer-poto">
                             <img  :src="item.poto" alt="" width="100%" height="100%">
@@ -35,7 +38,8 @@
     </div>
 </template>
 <script>
-import { getSingerList } from "api/singer";
+// import { getSingerList } from "api/singer";
+import {getSingerList} from 'api/index'
 import {ERR_OK} from 'api/config';
 import Singer from 'common/js/singer'
 import {mapMutations} from 'vuex'
@@ -51,10 +55,8 @@ export default {
     },
     methods:{
         _getSingerList(){
-            Indicator.open('加载中...');
             getSingerList().then(res=>{
-                if(res.code ===  ERR_OK){
-                    Indicator.close();
+                if(res.data.code ===  ERR_OK){
                     this.singerList = this.sortSinger(res.data.list);
                 }
             })
@@ -72,11 +74,12 @@ export default {
             singerList.forEach((item,index)=>{
                 if(index<HOT_SINGER_LEN){
                     map.hot.items.push(new Singer({
-                        id:item.Fsinger_mid,
-                        name:item.Fsinger_name
+                        mid:item.singermid,
+                        name:item.singername,
+                        id:item.singerid
                     }))
                 }
-                const key = item.Findex;
+                const key = item.index;
             // 如果没有key字母，创建一个以key字母为标识的对象
                 if(!map[key]){
                     map[key] = {
@@ -85,8 +88,9 @@ export default {
                     }
                 }
                 map[key].items.push(new Singer({
-                    id:item.Fsinger_mid,
-                    name:item.Fsinger_name
+                    mid:item.singermid,
+                    name:item.singername,
+                    id:item.singerid
                 }))
             });
             //把分好组的数组进行A~Z的顺序排序
@@ -107,6 +111,7 @@ export default {
         },
         //歌手详情页的跳转
         clickSingerItem(item){
+            console.log(item);
             this.$router.push({
                 path:`/singer/${item.id}`
             })
