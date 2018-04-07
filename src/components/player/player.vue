@@ -49,31 +49,49 @@
                     -webkit-text-size-adjust: none;
                 }
             }
-            .lyric-wrap{
-                width:100%;
-                height: 75%;
-                position: absolute;
-                top:1.5rem;
-                text-align:center;
-                padding:15px 0;
-                overflow: hidden;
-                p{
-                    margin:10px 0;
-                    color:rgba(0,0,0,.5);
-                    &.current-line{
-                        color:#fff;
+            .middle{
+                position: fixed;
+                width: 100%;
+                top: 80px;
+                bottom: 170px;
+                white-space: nowrap;
+                .middle-r{
+                    display: inline-block;
+                    width:100%;
+                    height: 100%;
+                    vertical-align: top;
+                    overflow: hidden;
+                    .lyric-wrap{
+                        text-align:center;
+                        padding:15px 0;
+                        
+                        p{
+                            margin:10px 0;
+                            color:rgba(0,0,0,.5);
+                            &.current-line{
+                                color:#fff;
+                            }
+                        }
+                    }
+                }
+                .middle-l{
+                    display: inline-block;
+                    width:100%;
+                    height: 100%;
+                    vertical-align: top;
+                    overflow: hidden;
+                    .lyric-img{
+                        text-align:center;
+                        margin-top:10%;
+                        animation: rotate-animation 10s infinite linear;
+                        img{
+                            border-radius:50%;
+                            border:10px solid rgba(0,0,0,.4);
+                        }
                     }
                 }
             }
-            .lyric-img{
-                text-align:center;
-                margin-top:15%;
-                animation: rotate-animation 10s infinite linear;
-                img{
-                    border-radius:50%;
-                    border:10px solid rgba(0,0,0,.4);
-                }
-            }
+           
             .play-time{
                 position: fixed;
                 bottom:2.5rem;
@@ -163,27 +181,33 @@
         <div id="screen-player" class="cover"  v-if="fullScreen" ref="screenPlayer">
             <img class="blurBack cover" :src="currentSong.img" alt="">
             <div class="mask"></div>
-            <div @touchstart.prevent="movetouchstart"
-            @touchmove.prevent="movetouch"
-            @touchend.prevent="movetouchend">
-                <div class="des-title">
-                    <i class="arrow-icon slide-down" @click="clickReturn()"></i>
-                    <div class="title-wrap"> 
-                        <span class="song-name">{{currentSong.songname}}</span>
-                        <h6 class="singer-name">{{currentSong.singer}}</h6>
-                    </div>
-                </div>
-                <div class="lyric-img" ref="lyricImg" :style="{animationPlayState:isRotate}">
-                    <img :src="currentSong.img" alt="专辑封面" width="80%" height="80%">
+            <div class="des-title">
+                <i class="arrow-icon slide-down" @click="clickReturn()"></i>
+                <div class="title-wrap"> 
+                    <span class="song-name">{{currentSong.songname}}</span>
+                    <h6 class="singer-name">{{currentSong.singer}}</h6>
                 </div>
             </div>
 
-            <!-- 歌词部分 -->
-            <scroll ref="lyricList" :data="currentLyric && currentLyric.lines">
-                <div class="lyric-wrap">
-                    <p v-for="(item,index) in currentLyric.lines" :class="{'current-line':currentLineNum==index}">{{item.txt}}</p>
+            <div
+            class="middle"  
+            @touchstart.prevent="movetouchstart"
+            @touchmove.prevent="movetouch"
+            @touchend.prevent="movetouchend">
+                <div class="middle-l" ref="middleL">
+                    <div class="lyric-img" ref="lyricImg" :style="{animationPlayState:isRotate}">
+                        <img :src="currentSong.img" alt="专辑封面" width="80%" height="80%">
+                    </div>
                 </div>
-            </scroll>
+
+                <!-- 歌词部分 -->
+                <scroll  class="middle-r"  ref="lyricList" :data="currentLyric.lines">
+                    <div class="lyric-wrap">
+                        <p v-for="(item,index) in currentLyric.lines" :class="{'current-line':currentLineNum==index}">{{item.txt}}</p>
+                    </div>
+                </scroll>
+            </div>
+            
             <!-- 下面的工具栏 -->
             <div class="play-time">
                 <span>{{currentTime | filterTime}}/{{totalTime | filterTime}}</span>
@@ -232,9 +256,14 @@ import {mapGetters,mapMutations,mapActions} from 'vuex'
 import {getLyric} from 'api/index'
 import animations from 'create-keyframe-animation'
 import progressBar from 'base/progressBar'
+import {prefixStyle} from 'common/js/dom'
 import playedList from '../common/playedList'
 import Lyric from 'lyric-parser'
 import Scroll from 'base/scroll'
+
+const transform = prefixStyle('transform')
+const transitionDuration = prefixStyle('transitionDuration')
+
 export default{
     components:{
         progressBar,
@@ -254,6 +283,7 @@ export default{
             currentLine:'',
             currentLineNum:0,
             currentShow:0,//显示CD还是歌词，0：CD，1:歌词
+            touch:{}
         }
     },
     created(){
@@ -348,7 +378,6 @@ export default{
         },
         // 获得对应的歌词
         getLyric(){
-            console.log("this.currentSong.songid",this.currentSong.songid)
             getLyric(this.currentSong.songid).then(res=>{
                 this.currentLyric = new Lyric(res.data.lyric,this.lyricHandler);
                 if(this.playing){
@@ -367,20 +396,23 @@ export default{
             this.touch.startX = touch.pageX;
             this.touch.startY = touch.pageY;
         },
-        movetouch(){
+        movetouch(e){
             if (!this.touch.initiated) {
                 return;
             }
             const touch =  e.touches[0];
             const deltaX = touch.pageX - this.touch.startX;
             const deltaY = touch.pageY - this.touch.startY;
-            if(Math.abs(deltaX)>Math.abs(deltaY)){
+            if(Math.abs(deltaX)<Math.abs(deltaY)){
                 return;
             }
-            const left = currentShow === 0 ? 0 : -window.innerWidth;
+            const left = this.currentShow === 0 ? 0 : -window.innerWidth;
             const offsetWidth =Math.min(0,Math.max(-window.innerWidth,left+deltaX));
+            this.touch.percent = Math.abs(offsetWidth / window.innerWidth)
             this.$refs.lyricList.$el.style[transform] = `translate3d(${offsetWidth}px,0,0)`;
-            this.$refs.lyricList.$el.style[transitionDuration] = 0
+            this.$refs.lyricList.$el.style[transitionDuration] = 0;
+            this.$refs.middleL.style.opacity = 1 - this.touch.percent
+            this.$refs.middleL.style[transitionDuration] = 0
         },
         movetouchend(){
 
