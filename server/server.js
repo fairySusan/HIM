@@ -11,6 +11,7 @@ var recommend;//推荐页面数据
 var newsongList;//新歌数据
 var singerList;//歌手数据
 var singerdetailList;//歌手详情页数据
+var lyric;//歌词数据
 
 // 异步读取
 fs.readFile('index/recommand.json', function (err, data) {
@@ -37,6 +38,12 @@ fs.readFile('singer/singerdetail.json', function (err, data) {
   }
   singerdetailList =  JSON.parse(data);
 });
+fs.readFile('lyric/lyric.json', function (err, data) {
+  if (err) {
+      return console.error(err);
+  }
+  lyric =  JSON.parse(data);
+});
 
 // 跨域设置
 app.all('*', function (req, res, next) {
@@ -62,6 +69,13 @@ app.get('/getSingerList',function(req,res){
 app.get('/getSingerDetail',function(req,res){
   singerdetailList.data.forEach(element => {
     if (req.query.id == element.singerid) {
+      res.send(element);
+    }
+  });
+})
+app.get('/getLyric',function(req,res){
+  lyric.data.forEach(element => {
+    if (req.query.id == element.songid) {
       res.send(element);
     }
   });

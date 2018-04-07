@@ -20,7 +20,7 @@ export function createSong(musicItem){
     albumname: musicItem.albumname,//专辑名
     duration: musicItem.interval,//歌曲时长
     img: `http://127.0.0.1:8081/${musicItem.picid}`,
-    url:`http://127.0.0.1:8081/songs/${musicItem.songid}`
+    url:`http://127.0.0.1:8081/songs/${musicItem.songid}.mp3`
   })
 }
 //一首歌有多个演唱者，连接演唱者的字符串

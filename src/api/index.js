@@ -8,3 +8,5 @@ export const getHotRecommend = () => axios.get(baseurl+'getHotRecommend?time='+n
 export const getSingerList = () => axios.get(baseurl+'getSingerList?time='+new Date().getTime());
 /* 得到歌手的详情页数据 */
 export const getSingerDetail = (id) => axios.get(baseurl+'getSingerDetail?id='+id+'&time='+new Date().getTime());
+/* 得到播放歌曲的歌词数据 */
+export const getLyric = (id) => axios.get(baseurl+'getLyric?id='+id+'&time='+new Date().getTime());

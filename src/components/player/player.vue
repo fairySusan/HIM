@@ -49,7 +49,22 @@
                     -webkit-text-size-adjust: none;
                 }
             }
-            
+            .lyric-wrap{
+                width:100%;
+                height: 75%;
+                position: absolute;
+                top:1.5rem;
+                text-align:center;
+                padding:15px 0;
+                overflow: hidden;
+                p{
+                    margin:10px 0;
+                    color:rgba(0,0,0,.5);
+                    &.current-line{
+                        color:#fff;
+                    }
+                }
+            }
             .lyric-img{
                 text-align:center;
                 margin-top:15%;
@@ -65,7 +80,7 @@
                 left:50%;
                 transform: translate(-50%,0);
                 font-size:10px;
-                color:rgba(0,0,0,.5);
+                color:#bbb;
             }
            .tools-bar{
                position: fixed;
@@ -148,17 +163,27 @@
         <div id="screen-player" class="cover"  v-if="fullScreen" ref="screenPlayer">
             <img class="blurBack cover" :src="currentSong.img" alt="">
             <div class="mask"></div>
-            <div class="des-title">
-                <i class="arrow-icon slide-down" @click="clickReturn()"></i>
-                <div class="title-wrap"> 
-                    <span class="song-name">{{currentSong.songname}}</span>
-                    <h6 class="singer-name">{{currentSong.singer}}</h6>
+            <div @touchstart.prevent="movetouchstart"
+            @touchmove.prevent="movetouch"
+            @touchend.prevent="movetouchend">
+                <div class="des-title">
+                    <i class="arrow-icon slide-down" @click="clickReturn()"></i>
+                    <div class="title-wrap"> 
+                        <span class="song-name">{{currentSong.songname}}</span>
+                        <h6 class="singer-name">{{currentSong.singer}}</h6>
+                    </div>
+                </div>
+                <div class="lyric-img" ref="lyricImg" :style="{animationPlayState:isRotate}">
+                    <img :src="currentSong.img" alt="专辑封面" width="80%" height="80%">
                 </div>
             </div>
-            <div class="lyric-img" ref="lyricImg" :style="{animationPlayState:isRotate}">
-                <img :src="currentSong.img" alt="专辑封面" width="80%" height="80%">
-            </div>
-            
+
+            <!-- 歌词部分 -->
+            <scroll ref="lyricList" :data="currentLyric && currentLyric.lines">
+                <div class="lyric-wrap">
+                    <p v-for="(item,index) in currentLyric.lines" :class="{'current-line':currentLineNum==index}">{{item.txt}}</p>
+                </div>
+            </scroll>
             <!-- 下面的工具栏 -->
             <div class="play-time">
                 <span>{{currentTime | filterTime}}/{{totalTime | filterTime}}</span>
@@ -204,13 +229,17 @@
 </template>
 <script>
 import {mapGetters,mapMutations,mapActions} from 'vuex'
+import {getLyric} from 'api/index'
 import animations from 'create-keyframe-animation'
 import progressBar from 'base/progressBar'
 import playedList from '../common/playedList'
+import Lyric from 'lyric-parser'
+import Scroll from 'base/scroll'
 export default{
     components:{
         progressBar,
-        playedList
+        playedList,
+        Scroll
     },
     data(){
         return{
@@ -220,7 +249,11 @@ export default{
             isDisplay:false,//控制播放历史列表是否可见
             playModeClass:'order-icon',
             isLikeClass:'nolike-icon',
-            isRotate:''//专辑封面是否旋转
+            isRotate:'',//专辑封面是否旋转
+            currentLyric:'',//歌词
+            currentLine:'',
+            currentLineNum:0,
+            currentShow:0,//显示CD还是歌词，0：CD，1:歌词
         }
     },
     created(){
@@ -313,6 +346,45 @@ export default{
             this.saveFavoriteList(this.currentSong);
             this.setLikeState(!this.isLike);
         },
+        // 获得对应的歌词
+        getLyric(){
+            console.log("this.currentSong.songid",this.currentSong.songid)
+            getLyric(this.currentSong.songid).then(res=>{
+                this.currentLyric = new Lyric(res.data.lyric,this.lyricHandler);
+                if(this.playing){
+                    this.currentLyric.play();
+                }else if(!this.playing){
+                    this.currentLyric.stop();
+                }
+            })
+        },
+        lyricHandler({lineNum,txt}){
+            this.currentLineNum = lineNum;
+        },
+        movetouchstart(e){
+            this.touch.initiated = true;
+            const touch =  e.touches[0];
+            this.touch.startX = touch.pageX;
+            this.touch.startY = touch.pageY;
+        },
+        movetouch(){
+            if (!this.touch.initiated) {
+                return;
+            }
+            const touch =  e.touches[0];
+            const deltaX = touch.pageX - this.touch.startX;
+            const deltaY = touch.pageY - this.touch.startY;
+            if(Math.abs(deltaX)>Math.abs(deltaY)){
+                return;
+            }
+            const left = currentShow === 0 ? 0 : -window.innerWidth;
+            const offsetWidth =Math.min(0,Math.max(-window.innerWidth,left+deltaX));
+            this.$refs.lyricList.$el.style[transform] = `translate3d(${offsetWidth}px,0,0)`;
+            this.$refs.lyricList.$el.style[transitionDuration] = 0
+        },
+        movetouchend(){
+
+        },
         ...mapMutations({
             SetFullScreen: 'SET_FULL_SCREEN',
             setPlaying:'SET_PLAYING',
@@ -337,6 +409,7 @@ export default{
     },
     watch:{
         currentSong(newCurrentSong){
+            this.getLyric();//获得对应歌词
             this.$nextTick(()=>{
                 this.$refs.audio.play();
             });
