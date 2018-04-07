@@ -11,7 +11,7 @@ export default class Song{
 
   }
 }
-export function createSong(musicItem,key){
+export function createSong(musicItem){
   return new Song({
     songid:musicItem.songid,//歌曲id
     albummid:musicItem.albummid,//专辑id

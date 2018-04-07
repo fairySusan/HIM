@@ -50,36 +50,32 @@ export default {
     },
     methods:{
         _getSingerDetail(){
-            // Indicator.open('加载中...');
             if (!this.singer.id) {
                 this.$router.push('/singer');
                 return;
             }
-            console.log("vvv",this.singer.id);
             getSingerDetail(this.singer.id).then(res =>{
-                if(res.data.code ===  0){
-                    // Indicator.close();
-                    this.musicData = this.normalizeSongs(res.data.list,key);
-                    this.singerImg = `https://y.gtimg.cn/music/photo_new/T001R300x300M000${res.data.singer_mid}.jpg?max_age=2592000`
+                if(res.data.code ===  ERR_OK){
+                    this.musicData = this.normalizeSongs(res.data.list);
+                    this.singerImg = `http://127.0.0.1:8081/singerimg/${res.data.singermid}`
                     this.singerInfo.imgUrl = this.singerImg;
-                    this.singerInfo.title = res.data.singer_name;
-                    console.log(this.singerInfo);
+                    this.singerInfo.title = res.singername;
                 }
             })
         },
-        _getVKey(){
-            getVKey().then(res=>{
-                this.key = res.key;
-                this._getSingerDetail(res.key);
-            })
-        },
+        // _getVKey(){
+        //     getVKey().then(res=>{
+        //         this.key = res.key;
+        //         this._getSingerDetail(res.key);
+        //     })
+        // },
         //处理获得的歌手详情数据
-        normalizeSongs(list,key){
+        normalizeSongs(list){
             let ret = [];
             list.forEach((item) =>{
-                let musicDataItem = item.musicData;
-                if (musicDataItem.songid && musicDataItem.albummid) {
-                    ret.push(createSong(musicDataItem,key));
+                let musicDataItem = item;
+                if (musicDataItem.songid) {
+                    ret.push(createSong(musicDataItem));
                 }
             });
             return ret;

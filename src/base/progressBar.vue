@@ -6,7 +6,6 @@
         // bottom: 30px;
         .color-bar{
             background-color:@themeColor;
-            width:20px;
             height:4px;
             position: absolute;
             top:0px;
@@ -31,7 +30,7 @@
   <div class="progress-bar" ref="progressBar">
       <div class="color-bar" ref="colorBar"></div>
       <div class="total-bar"></div>
-      <div class="circle-btn"></div>
+      <div class="circle-btn" ref="circleBtn"></div>
   </div>
 </template>
 <script>
@@ -54,6 +53,7 @@ export default {
               const barWidth = this.$refs.progressBar.clientWidth - CIRCLR_BTN;
               const offsetWidth = newPercent*barWidth;
               this.$refs.colorBar.style.width = offsetWidth+'px';
+              this.$refs.circleBtn.style.left = offsetWidth+'px';
           }
       }
   }

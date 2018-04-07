@@ -2,6 +2,16 @@
 @import '../../assets/less/var.less';
     .player{
         #screen-player{
+            .mask{
+                width:100%;
+                height:100%;
+                background: rgba(0,0,0,.3);
+                position: absolute;
+                top:0;
+                left:0;
+                right:0;
+                bottom:0;
+            }
             .blurBack{
                 width:100%;
                 height:100%;
@@ -137,6 +147,7 @@
     <transition name="normal">
         <div id="screen-player" class="cover"  v-if="fullScreen" ref="screenPlayer">
             <img class="blurBack cover" :src="currentSong.img" alt="">
+            <div class="mask"></div>
             <div class="des-title">
                 <i class="arrow-icon slide-down" @click="clickReturn()"></i>
                 <div class="title-wrap"> 
@@ -150,7 +161,7 @@
             
             <!-- 下面的工具栏 -->
             <div class="play-time">
-                <span>00:19/03:23</span>
+                <span>{{currentTime | filterTime}}/{{totalTime | filterTime}}</span>
             </div>
             <div class="tools-bar">
                 <div>
@@ -185,7 +196,7 @@
             </div>
         </div>
     </transition>
-    <audio ref="audio" :src="currentSong.url">
+    <audio ref="audio" :src="currentSong.url" @timeupdate="updataTime" @canplay="getTotalTime">
         <source :src="currentSong.url" type="audio/mpeg">
         您的浏览器不支持 audio 元素。
     </audio>
@@ -204,7 +215,8 @@ export default{
     data(){
         return{
             percent:null,//播放进度百分比
-            currentTime:null,//当前播放的时间
+            currentTime:0,//当前播放的时间
+            totalTime:0,//当前歌曲的总时间
             isDisplay:false,//控制播放历史列表是否可见
             playModeClass:'order-icon',
             isLikeClass:'nolike-icon',
@@ -267,6 +279,14 @@ export default{
             const y = window.innerHeight-paddingTop-width/2-paddingBottom;
             return {x,y,scale}
         },
+        // 更新歌曲播放的时间
+        updataTime(e){
+            this.currentTime = e.target.currentTime;
+        },
+        // 获得歌曲的总时长
+        getTotalTime(e){
+            this.totalTime = e.target.duration;
+        },
         //暂停播放按钮点击事件
         togglePlaying(){
             this.setPlaying(!this.playing);
@@ -318,20 +338,19 @@ export default{
     watch:{
         currentSong(newCurrentSong){
             this.$nextTick(()=>{
-                this.currentTime = this.$refs.audio.currentTime;
                 this.$refs.audio.play();
-                console.log("wohahahhah");
             });
             this.savePlayHisList(newCurrentSong);
         },
-        percent(){
-            return this.currentTime/this.currentSong.duration;
+        // 获取播放时间占总时间的百分比，传给progressbar组件
+        currentTime(){
+            this.percent = this.currentTime/this.totalTime
+            return this.percent;
         },
         //监听playing控制音乐播放还是暂停
         playing(newPlaying){
             this.$nextTick(()=>{
                 const audio = this.$refs.audio;
-                const lyricImg = this.$refs.lyricImg;
                 newPlaying ? audio.play() : audio.pause()
                 //监听播放还是停止，来控制专辑封面是否旋转
                 this.isRotate = newPlaying?'running':'paused';
@@ -348,6 +367,17 @@ export default{
         },
         isLike(){
             this.isLikeClass =  this.isLike ? 'like-icon' : 'nolike-icon';
+        }
+    },
+    filters:{
+        filterTime:function(value){
+            value = value | 0;
+            let minute = value / 60 | 0;
+            let second = value % 60;
+            minute = minute<10?('0'+minute):minute;
+            second = second<10?('0'+second):second;
+            return `${minute}:${second}`
+
         }
     }
 }

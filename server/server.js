@@ -10,6 +10,7 @@ app.use(express.static('public'));
 var recommend;//推荐页面数据
 var newsongList;//新歌数据
 var singerList;//歌手数据
+var singerdetailList;//歌手详情页数据
 
 // 异步读取
 fs.readFile('index/recommand.json', function (err, data) {
@@ -29,6 +30,12 @@ fs.readFile('singer/singer.json', function (err, data) {
       return console.error(err);
   }
   singerList =  data;
+});
+fs.readFile('singer/singerdetail.json', function (err, data) {
+  if (err) {
+      return console.error(err);
+  }
+  singerdetailList =  JSON.parse(data);
 });
 
 // 跨域设置
@@ -53,8 +60,11 @@ app.get('/getSingerList',function(req,res){
   res.send(singerList);
 })
 app.get('/getSingerDetail',function(req,res){
-  console.log(req.query);
-  res.send(singerList);
+  singerdetailList.data.forEach(element => {
+    if (req.query.id == element.singerid) {
+      res.send(element);
+    }
+  });
 })
 
  var server = app.listen(8081, function () {
