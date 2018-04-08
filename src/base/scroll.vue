@@ -26,7 +26,12 @@ export default {
     /*是否开启横向滚动  */
     scrollX:{
         type:Boolean,
-        default:false
+        default:true
+    },
+    /*是否开启纵向滚动  */
+    scrollY:{
+        type:Boolean,
+        default:true
     },
     /* 是否派发滚动事件 */
     listenScroll:{
@@ -62,16 +67,18 @@ export default {
         this.scroll = new BScroll(this.$refs.wrapper,{
             probeType:this.probeType,
             click:this.click,
-            scrollX:this.scrollX
+            scrollX:this.scrollX,//开启横向滚动
+            scrollY:this.scrollY
         })
         if (this.listenScroll) {
-          let me = this
+          let self = this
           this.scroll.on('scroll', (pos) => {
-            me.$emit('scroll', pos)
+            self.$emit('scroll', pos)
           })
         }
 
         if (this.pullup) {
+            console.log("run scroll00");
           this.scroll.on('scrollEnd', () => {
             if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
               this.$emit('scrollToEnd')
@@ -87,12 +94,14 @@ export default {
     },
     enable(){
         this.scroll && this.scroll.enable();
+        console.log("run scroll");
     },
     disable(){
         this.scroll && this.scroll.disable();
     },
     refresh(){
         this.scroll && this.scroll.refresh();
+        console.log("refresh");
     },
     scrollTo() {
     this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
@@ -105,6 +114,7 @@ export default {
     data(){
         setTimeout(()=>{
             this.refresh()
+            console.log("data",this.data);
         },20);
     }
   }

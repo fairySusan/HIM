@@ -74,11 +74,23 @@ app.get('/getSingerDetail',function(req,res){
   });
 })
 app.get('/getLyric',function(req,res){
+  let flag = 0;
+  let tips = {
+    "code":1,
+    "songname":"",
+    "songid":"",
+    "lyric":"暂无歌词"
+  }
   lyric.data.forEach(element => {
     if (req.query.id == element.songid) {
       res.send(element);
+      flag = 1;
+      return;
     }
   });
+  if (flag == 0) {
+    res.send(tips);
+  }
 })
 
  var server = app.listen(8081, function () {

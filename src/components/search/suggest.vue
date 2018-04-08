@@ -13,9 +13,6 @@
                 .icon-mine:before{
                     content:'/e912';
                 }
-                .icon-music{
-
-                }
                 .text{
                     display: flex;
                     flex-direction: column;
@@ -34,19 +31,19 @@
     }
 </style>
 <template>
-  <div class="suggest">
-    <ul class="result-wrapper">
-        <li class="result-list" v-for="(item,index) in result" :key="item.songid" @click="selectItem(item,index)">
-            <div class="icon">
-                <i :class="getIconCls(item)"></i>
-            </div>
-            <div class="text">
-                <span class="song-name">{{item.songname}}</span>
-                <span class="singer-name">{{item.singer}}</span>
-            </div>
-        </li>
-    </ul>
-  </div>
+    <div class="suggest">
+        <ul class="result-wrapper">
+            <li class="result-list" v-for="(item,index) in result" :key="item.songid" @click="selectItem(item,index)">
+                <div class="icon">
+                    <i :class="getIconCls(item)"></i>
+                </div>
+                <div class="text">
+                    <span class="song-name">{{item.songname}}</span>
+                    <span class="singer-name">{{item.singer}}</span>
+                </div>
+            </li>
+        </ul>
+    </div>
 </template>
 <script type="text/ecmascript-6">
 import {search} from 'api/search'
@@ -54,9 +51,11 @@ import {ERR_OK} from 'api/config'
 import {filterSinger} from 'common/js/song'
 import {createSong} from 'common/js/song'
 import {mapActions} from 'vuex'
-import { Indicator } from 'mint-ui';
+import { Indicator } from 'mint-ui'
+import Scroll from 'base/scroll'
 const TYPE_SINGER = 'singer'
 export default {
+    components:{Scroll},
     props:{
         query:{
             type:String,
@@ -70,7 +69,8 @@ export default {
     data(){
         return{
             page:1,
-            result:[]
+            result:[],
+            pullup:true
         }
     },
     created(){

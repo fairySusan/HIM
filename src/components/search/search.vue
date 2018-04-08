@@ -20,35 +20,35 @@
         .tag-wrap{
           font-size: 0;
           .name-tag{
-          font-size:12px;
-          background:@themeColor;
-          color:white;
-          border-radius: 99px;
-          display: inline-block;
-          padding:5px 10px;
-          margin:5px;
+            font-size:12px;
+            background:@themeColor;
+            color:white;
+            border-radius: 99px;
+            display: inline-block;
+            padding:5px 10px;
+            margin:5px;
           }
         }
-    }
-    .history-panel{
-      margin:10px;
-      .his-Title,.clearHis{
-        font-size:14px;
       }
-      .clearHis{
-        font-size:14px;
-        text-decoration: underline;
-      }
-      .history-list{
-        padding:10px 0;
-        border-bottom:1px solid @underlineColor;
-        .cancel-tag{
-          font-size: 16px;
+      .history-panel{
+        margin:10px;
+        .his-Title,.clearHis{
+          font-size:14px;
         }
-      }
-    } 
+        .clearHis{
+          font-size:14px;
+          text-decoration: underline;
+        }
+        .history-list{
+          padding:10px 0;
+          border-bottom:1px solid @underlineColor;
+          .cancel-tag{
+            font-size: 16px;
+          }
+        }
+      } 
+    }
   }
-}
 </style>
 <template>
   <div class="search">

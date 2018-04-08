@@ -7,7 +7,7 @@
         z-index:1003;
         width:100%;
         .list-wrap{
-            max-height:25rem;
+            max-height:10rem;
             background: @themeColor;
             .deleteAll-btn{
                 text-align: right;

@@ -27,7 +27,7 @@
                 filter:blur(15px);
             }
             .des-title{
-                position: relative;
+                position:relative;
                 text-align:center;
                 height: 1.5rem;
                 background-color:@themeColor;
@@ -204,6 +204,7 @@
                 <scroll  class="middle-r"  ref="lyricList" :data="currentLyric.lines">
                     <div class="lyric-wrap">
                         <p ref="lyricLines" v-for="(item,index) in currentLyric.lines" :class="{'current-line':currentLineNum==index}">{{item.txt}}</p>
+                        <p v-if="!currentLyric.lines">{{tips}}</p>
                     </div>
                 </scroll>
             </div>
@@ -214,7 +215,7 @@
             </div>
             <div class="tools-bar">
                 <div>
-                    <progress-bar :percent="percent"></progress-bar>
+                    <progress-bar :percent="percent" @percentChange="percentChange"></progress-bar>
                 </div>
                 <div class="tools-btns">
                     <button :class="playModeClass"></button>
@@ -253,6 +254,7 @@
 </template>
 <script>
 import {mapGetters,mapMutations,mapActions} from 'vuex'
+import {ERR_OK} from 'api/config';
 import {getLyric} from 'api/index'
 import animations from 'create-keyframe-animation'
 import progressBar from 'base/progressBar'
@@ -279,11 +281,12 @@ export default{
             playModeClass:'order-icon',
             isLikeClass:'nolike-icon',
             isRotate:'',//专辑封面是否旋转
-            currentLyric:'',//歌词
+            currentLyric:null,//歌词
             currentLine:'',
             currentLineNum:0,
             currentShow:0,//显示CD还是歌词，0：CD，1:歌词
-            touch:{}
+            touch:{},
+            tips:'',//没有歌词的提示
         }
     },
     created(){
@@ -382,9 +385,16 @@ export default{
         // 获得对应的歌词
         getLyric(){
             getLyric(this.currentSong.songid).then(res=>{
-                this.currentLyric = new Lyric(res.data.lyric,this.lyricHandler);
-                if(this.playing){
-                    this.currentLyric.play();
+
+                if(res.data.code === ERR_OK){
+                    this.currentLyric = new Lyric(res.data.lyric,this.lyricHandler);
+                    if(this.playing){
+                        this.currentLyric.play();
+                    }
+                }else{
+                    this.currentLyric.lines = [];
+                    this.tips = res.data;
+                    console.log("res",res.data);
                 }
             })
         },
@@ -397,6 +407,7 @@ export default{
                 this.$refs.lyricList.scrollTo(0,0,1000);
             }
         },
+        //歌词页面和播放页面左右滑动
         movetouchstart(e){
             this.touch.initiated = true;
             const touch =  e.touches[0];
@@ -421,8 +432,11 @@ export default{
             this.$refs.middleL.style.opacity = 1 - this.touch.percent
             this.$refs.middleL.style[transitionDuration] = 0
         },
-        movetouchend(){
-
+        movetouchend(e){
+            this.touch.initiated = false;
+        },
+        percentChange(percent){
+            this.$refs.audio.currentTime = this.totalTime*percent;
         },
         ...mapMutations({
             SetFullScreen: 'SET_FULL_SCREEN',

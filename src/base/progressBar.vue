@@ -30,7 +30,9 @@
   <div class="progress-bar" ref="progressBar">
       <div class="color-bar" ref="colorBar"></div>
       <div class="total-bar"></div>
-      <div class="circle-btn" ref="circleBtn"></div>
+      <div class="circle-btn" ref="circleBtn" @touchstart.prevent="progressTouchStart"
+      @touchmove.prevent="progressTouchMove"
+      @touchend="progressTouchEnd"></div>
   </div>
 </template>
 <script>
@@ -47,9 +49,36 @@ export default {
 
       }
   },
+  created(){
+      this.touch={};
+  },
+  methods:{
+        progressTouchStart(e){
+            this.touch.initiated = true;//表示已经初始化了
+            this.touch.startX = e.touches[0].pageX;//touches[0]表示第一个手指
+            this.touch.startY = e.touches[0].pageY;
+            this.touch.left = this.$refs.colorBar.clientWidth;
+
+        },
+        progressTouchMove(e){
+            if(!this.touch.initiated){
+                return;
+            }
+            let deltaX = e.touches[0].pageX - this.touch.startX;
+            const barWidth = this.$refs.progressBar.clientWidth - CIRCLR_BTN;
+            let offsetWidth = Math.min(barWidth, Math.max(0,this.touch.left+deltaX));
+            this.$refs.colorBar.style.width = offsetWidth+'px';
+            this.$refs.circleBtn.style.left = offsetWidth+'px';   
+        },
+        progressTouchEnd(e){
+            this.touch.initiated = false;
+            let percent = this.$refs.colorBar.clientWidth/this.$refs.progressBar.clientWidth;
+            this.$emit("percentChange",percent);
+        }
+  },
   watch:{
       percent(newPercent){
-          if(newPercent>=0){
+          if(newPercent>=0 && !this.touch.initiated){
               const barWidth = this.$refs.progressBar.clientWidth - CIRCLR_BTN;
               const offsetWidth = newPercent*barWidth;
               this.$refs.colorBar.style.width = offsetWidth+'px';
