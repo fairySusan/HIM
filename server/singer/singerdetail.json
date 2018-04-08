@@ -133,42 +133,6 @@
                 "type":"single",
                 "album_pic":"",
                 "albummid":"",
-                "albumname":"不想放手",
-                "coverUrl":"",
-                "rcmdcontent":"",
-                "songname":"不要说话",
-                "songid":"015",
-                "singername":"陈奕迅",
-                "singer":[{
-                    "name":"陈奕迅",
-                    "id":""
-                }],
-                "time_public":"",
-                "linkUrl":"",
-                "interval":0,
-                "picid":"songimg/015.jpg"
-            },{
-                "type":"single",
-                "album_pic":"",
-                "albummid":"",
-                "albumname":"认了吧",
-                "coverUrl":"",
-                "rcmdcontent":"",
-                "songname":"红玫瑰",
-                "songid":"016",
-                "singername":"陈奕迅",
-                "singer":[{
-                    "name":"陈奕迅",
-                    "id":""
-                }],
-                "time_public":"",
-                "linkUrl":"",
-                "interval":0,
-                "picid":"songimg/006.jpg"
-            },{
-                "type":"single",
-                "album_pic":"",
-                "albummid":"",
                 "albumname":"1997-2007 跨世纪国语精选",
                 "coverUrl":"",
                 "rcmdcontent":"",
@@ -183,24 +147,128 @@
                 "linkUrl":"",
                 "interval":0,
                 "picid":"songimg/006.jpg"
-            },{
+            }
+        ]
+    },{
+        "code":0,
+        "singerid":"004",
+        "singermid":"004.jpg",
+        "singername":"林俊杰", 
+        "list":[{
                 "type":"single",
                 "album_pic":"",
                 "albummid":"",
-                "albumname":"陪你度过漫长岁月",
+                "albumname":"JJ陆",
                 "coverUrl":"",
                 "rcmdcontent":"",
-                "songname":"陪你度过漫长岁月",
-                "songid":"017",
-                "singername":"陈奕迅",
+                "songname":"醉赤壁",
+                "songid":"018",
+                "singername":"林俊杰",
                 "singer":[{
-                    "name":"陈奕迅",
+                    "name":"林俊杰",
                     "id":""
                 }],
                 "time_public":"",
                 "linkUrl":"",
                 "interval":0,
-                "picid":"songimg/017.jpg"
+                "picid":"songimg/018.jpg"
+            },{
+                "type":"single",
+                "album_pic":"",
+                "albummid":"",
+                "albumname":"她说 概念自选辑",
+                "coverUrl":"",
+                "rcmdcontent":"",
+                "songname":"她说",
+                "songid":"019",
+                "singername":"林俊杰",
+                "singer":[{
+                    "name":"林俊杰",
+                    "id":""
+                }],
+                "time_public":"",
+                "linkUrl":"",
+                "interval":0,
+                "picid":"songimg/019.jpg"
+            },{
+                "type":"single",
+                "album_pic":"",
+                "albummid":"",
+                "albumname":"第二天堂",
+                "coverUrl":"",
+                "rcmdcontent":"",
+                "songname":"江南",
+                "songid":"020",
+                "singername":"林俊杰",
+                "singer":[{
+                    "name":"林俊杰",
+                    "id":""
+                }],
+                "time_public":"",
+                "linkUrl":"",
+                "interval":0,
+                "picid":"songimg/020.jpg"
+            }
+        ]
+    },{
+        "code":0,
+        "singerid":"005",
+        "singermid":"005.jpg",
+        "singername":"李荣浩", 
+        "list":[{
+                "type":"single",
+                "album_pic":"",
+                "albummid":"",
+                "albumname":"模特",
+                "coverUrl":"",
+                "rcmdcontent":"",
+                "songname":"模特",
+                "songid":"021",
+                "singername":"李荣浩",
+                "singer":[{
+                    "name":"李荣浩",
+                    "id":""
+                }],
+                "time_public":"",
+                "linkUrl":"",
+                "interval":0,
+                "picid":"songimg/021.jpg"
+            },{
+                "type":"single",
+                "album_pic":"",
+                "albummid":"",
+                "albumname":"模特",
+                "coverUrl":"",
+                "rcmdcontent":"",
+                "songname":"李白",
+                "songid":"022",
+                "singername":"李荣浩",
+                "singer":[{
+                    "name":"李荣浩",
+                    "id":""
+                }],
+                "time_public":"",
+                "linkUrl":"",
+                "interval":0,
+                "picid":"songimg/021.jpg"
+            },{
+                "type":"single",
+                "album_pic":"",
+                "albummid":"",
+                "albumname":"小黄",
+                "coverUrl":"",
+                "rcmdcontent":"",
+                "songname":"老街",
+                "songid":"023",
+                "singername":"李荣浩",
+                "singer":[{
+                    "name":"李荣浩",
+                    "id":""
+                }],
+                "time_public":"",
+                "linkUrl":"",
+                "interval":0,
+                "picid":"songimg/020.jpg"
             }
         ]
     }
