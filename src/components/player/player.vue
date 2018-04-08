@@ -5,7 +5,7 @@
             .mask{
                 width:100%;
                 height:100%;
-                background: rgba(0,0,0,.3);
+                background: rgba(0,0,0,.5);
                 position: absolute;
                 top:0;
                 left:0;
@@ -67,7 +67,7 @@
                         
                         p{
                             margin:10px 0;
-                            color:rgba(0,0,0,.5);
+                            color:rgb(150,150,150);
                             &.current-line{
                                 color:#fff;
                             }
@@ -203,7 +203,7 @@
                 <!-- 歌词部分 -->
                 <scroll  class="middle-r"  ref="lyricList" :data="currentLyric.lines">
                     <div class="lyric-wrap">
-                        <p v-for="(item,index) in currentLyric.lines" :class="{'current-line':currentLineNum==index}">{{item.txt}}</p>
+                        <p ref="lyricLines" v-for="(item,index) in currentLyric.lines" :class="{'current-line':currentLineNum==index}">{{item.txt}}</p>
                     </div>
                 </scroll>
             </div>
@@ -219,7 +219,7 @@
                 <div class="tools-btns">
                     <button :class="playModeClass"></button>
                     <button class="last-icon" @click="playLast"></button>
-                    <button v-bind:class="playing ? 'play-icon' : 'stop-icon'" @click="togglePlaying"></button>
+                    <button v-bind:class="playing ? 'stop-icon' : 'play-icon'" @click="togglePlaying"></button>
                     <button class="next-icon" @click="playNext"></button>
                     <button :class="isLikeClass" @click="favoriteSong"></button>
                 </div>
@@ -345,6 +345,9 @@ export default{
         // 更新歌曲播放的时间
         updataTime(e){
             this.currentTime = e.target.currentTime;
+            // if (this.currentTime>=this.totalTime) {
+            //     this.setCurrentIndex(this.currentIndex+2);
+            // }
         },
         // 获得歌曲的总时长
         getTotalTime(e){
@@ -382,13 +385,17 @@ export default{
                 this.currentLyric = new Lyric(res.data.lyric,this.lyricHandler);
                 if(this.playing){
                     this.currentLyric.play();
-                }else if(!this.playing){
-                    this.currentLyric.stop();
                 }
             })
         },
         lyricHandler({lineNum,txt}){
             this.currentLineNum = lineNum;
+            if (lineNum>7) {
+              let lineEl =  this.$refs.lyricLines[lineNum-5];
+              this.$refs.lyricList.scrollToElement(lineEl,1000);
+            }else{
+                this.$refs.lyricList.scrollTo(0,0,1000);
+            }
         },
         movetouchstart(e){
             this.touch.initiated = true;
@@ -442,6 +449,9 @@ export default{
     watch:{
         currentSong(newCurrentSong){
             this.getLyric();//获得对应歌词
+            if (this.currentLyric) {
+                this.currentLyric.stop();
+            }
             this.$nextTick(()=>{
                 this.$refs.audio.play();
             });
@@ -457,6 +467,10 @@ export default{
             this.$nextTick(()=>{
                 const audio = this.$refs.audio;
                 newPlaying ? audio.play() : audio.pause()
+                //歌词停止还是播放
+                if (this.currentLyric) {
+                    this.currentLyric.togglePlay();
+                }
                 //监听播放还是停止，来控制专辑封面是否旋转
                 this.isRotate = newPlaying?'running':'paused';
             })
