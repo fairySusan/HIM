@@ -34,6 +34,7 @@
                 </div>
             </mt-index-section>
         </mt-index-list>
+        <!-- 渲染singer-detail组件 -->
         <router-view></router-view>
     </div>
 </template>
@@ -111,7 +112,6 @@ export default {
         },
         //歌手详情页的跳转
         clickSingerItem(item){
-            console.log(item);
             this.$router.push({
                 path:`/singer/${item.id}`
             })

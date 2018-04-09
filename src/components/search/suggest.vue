@@ -121,7 +121,6 @@ export default {
         // },
         //点击搜索出来的歌曲事件
         selectItem(item,index){
-            console.log('item',item);
             this.$emit('select', item,index);
             this.selectPlay({
                 list:this.result,

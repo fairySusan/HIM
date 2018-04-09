@@ -203,8 +203,8 @@
                 <!-- 歌词部分 -->
                 <scroll  class="middle-r"  ref="lyricList" :data="currentLyric.lines">
                     <div class="lyric-wrap">
-                        <p ref="lyricLines" v-for="(item,index) in currentLyric.lines" :class="{'current-line':currentLineNum==index}">{{item.txt}}</p>
-                        <p v-if="!currentLyric.lines">{{tips}}</p>
+                        <p ref="lyricLines" v-if="isLyric" v-for="(item,index) in currentLyric.lines" :class="{'current-line':currentLineNum==index}">{{item.txt}}</p>
+                        <p v-if="!isLyric">{{tips}}</p>
                     </div>
                 </scroll>
             </div>
@@ -241,7 +241,7 @@
                <span class="singer-name grayFont">{{currentSong.singer}}</span> 
             </div>
             <div class="icon-btn">
-                <button :class="['state-btn',playing?'play-mini':'stop-mini']" @click.stop="togglePlaying"></button>
+                <button :class="['state-btn',playing?'stop-mini':'play-mini']" @click.stop="togglePlaying"></button>
                 <button class="list-btn playList-icon" @click.stop="showPlayHis()"></button>
             </div>
         </div>
@@ -281,12 +281,13 @@ export default{
             playModeClass:'order-icon',
             isLikeClass:'nolike-icon',
             isRotate:'',//专辑封面是否旋转
-            currentLyric:null,//歌词
+            currentLyric:{},//歌词
             currentLine:'',
             currentLineNum:0,
             currentShow:0,//显示CD还是歌词，0：CD，1:歌词
             touch:{},
             tips:'',//没有歌词的提示
+            isLyric:false
         }
     },
     created(){
@@ -362,12 +363,13 @@ export default{
         },
         //上一首播放按钮点击事件
         playLast(){
-            let index =  this.currentIndex>0 ? this.currentIndex-1:this.currentIndex;
+            let index =  this.currentIndex>0 ? this.currentIndex-1:this.playList.length-1;
             this.setCurrentIndex(index);
         },
         //下一首播放按钮点击事件
         playNext(){
-             this.setCurrentIndex(this.currentIndex+1);
+            let index = this.currentIndex>=(this.playList.length-1)? 0 : (this.currentIndex+1);
+            this.setCurrentIndex(index);
         },
         // 显示播放历史列表组件
         showPlayHis(){
@@ -385,16 +387,15 @@ export default{
         // 获得对应的歌词
         getLyric(){
             getLyric(this.currentSong.songid).then(res=>{
-
                 if(res.data.code === ERR_OK){
+                    this.isLyric = true;
                     this.currentLyric = new Lyric(res.data.lyric,this.lyricHandler);
                     if(this.playing){
                         this.currentLyric.play();
                     }
                 }else{
-                    this.currentLyric.lines = [];
-                    this.tips = res.data;
-                    console.log("res",res.data);
+                    this.isLyric = false;
+                    this.tips = res.data.lyric;
                 }
             })
         },
@@ -463,7 +464,7 @@ export default{
     watch:{
         currentSong(newCurrentSong){
             this.getLyric();//获得对应歌词
-            if (this.currentLyric) {
+            if (this.currentLyric && this.isLyric) {
                 this.currentLyric.stop();
             }
             this.$nextTick(()=>{
@@ -482,7 +483,8 @@ export default{
                 const audio = this.$refs.audio;
                 newPlaying ? audio.play() : audio.pause()
                 //歌词停止还是播放
-                if (this.currentLyric) {
+                console.log("this.lyric",this.isLyric);
+                if (this.currentLyric && this.isLyric) {
                     this.currentLyric.togglePlay();
                 }
                 //监听播放还是停止，来控制专辑封面是否旋转

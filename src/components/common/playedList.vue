@@ -9,6 +9,7 @@
         .list-wrap{
             max-height:10rem;
             background: @themeColor;
+            overflow:auto;
             .deleteAll-btn{
                 text-align: right;
                 color:rgba(0,0,0,0.5);

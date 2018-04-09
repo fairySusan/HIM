@@ -78,7 +78,6 @@ export default {
         }
 
         if (this.pullup) {
-            console.log("run scroll00");
           this.scroll.on('scrollEnd', () => {
             if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
               this.$emit('scrollToEnd')
@@ -94,14 +93,12 @@ export default {
     },
     enable(){
         this.scroll && this.scroll.enable();
-        console.log("run scroll");
     },
     disable(){
         this.scroll && this.scroll.disable();
     },
     refresh(){
         this.scroll && this.scroll.refresh();
-        console.log("refresh");
     },
     scrollTo() {
     this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
@@ -114,7 +111,6 @@ export default {
     data(){
         setTimeout(()=>{
             this.refresh()
-            console.log("data",this.data);
         },20);
     }
   }

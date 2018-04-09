@@ -12,7 +12,6 @@ const PLAYHIS_MAX_LENGTH = 100
  若数组长度满，就删掉最后一个 */
 
 function insertArray(arr,val,compare,maxLen){
-    console.log(arr);
     const index = arr.findIndex(compare);//findIndex是es6的函数，查找数组中是否有这个元素
     if(index === 0){
         return 

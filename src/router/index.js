@@ -48,12 +48,12 @@ export default new Router({
         {
           path:'/login',
           component:login
+        },
+        {
+          path:'/userCenter',
+          component:userCenter
         }
       ]
     },
-    {
-      path:'/userCenter',
-      component:userCenter
-    }
   ]
 })

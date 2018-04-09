@@ -20,6 +20,7 @@
         <router-view></router-view>
       </keep-alive>
     </div>
+    <!-- 渲染播放器内核组件 -->
     <player></player>
   </div>
 </template>
@@ -27,11 +28,13 @@
 <script>
 import navBar from './components/navBar/navBar'
 import player from "./components/player/player";
+import userCenter from "./components/user-center/user-center";
 export default {
   name: 'App',
   components:{
     navBar,
-    player
+    player,
+    userCenter
   }
 }
 </script>
