@@ -24,8 +24,9 @@
 <script>
 import {mapGetters} from 'vuex';
 import {getRankDetail} from 'api/rank'
+import {getVKey} from 'api/singer'
 import {ERR_OK} from 'api/config';
-import {createSong} from 'common/js/song'
+import {createRankSong} from 'common/js/song'
 import musicList from '../common/musiclist'
 import { Indicator } from 'mint-ui';
 
@@ -40,11 +41,13 @@ export default {
             topInfo:{
                 imgUrl:'',
                 title:''
-            }
+            },
+            key:''
         }
     },
     created(){
         this._getRankDetail();
+        // this._getVKey();
     },
     methods:{
         _getRankDetail(){
@@ -62,13 +65,19 @@ export default {
                 }
             })
         },
+        // _getVKey(){
+        //     getVKey().then(res=>{
+        //         this.key = res.data.items[0].vkey;
+        //         console.log("res.data",this.key);
+        //     })
+        // },
         //处理获得的歌手详情数据
         normalizeSongs(list){
             let ret = [];
             list.forEach((item) =>{
                 let musicDataItem = item.data;
                 if (musicDataItem.songid && musicDataItem.albummid) {
-                    ret.push(createSong(musicDataItem));
+                    ret.push(createRankSong(musicDataItem,this.key));
                 }
             });
             return ret;

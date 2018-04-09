@@ -5,6 +5,8 @@
         position: absolute;
         top:8%;
         width: 100%;
+        background:@purePurple;
+        z-index: 1000;
         .result-wrapper{
             margin:0 10px 0 10px;
             .result-list{

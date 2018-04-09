@@ -44,7 +44,14 @@ module.exports = {
         pathRewrite: {
           '^/getLyric': '/getLyric'
         }
-      }
+      },
+      '/api/lyric': {
+        target: 'http://127.0.0.1:8081',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/lyric': '/api/lyric'
+        }
+      },
     },
 
     // Various Dev Server settings

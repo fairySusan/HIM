@@ -255,7 +255,8 @@
 <script>
 import {mapGetters,mapMutations,mapActions} from 'vuex'
 import {ERR_OK} from 'api/config';
-import {getLyric} from 'api/index'
+// import {getLyric} from 'api/index'
+// import {getLyric} from 'api/song'
 import animations from 'create-keyframe-animation'
 import progressBar from 'base/progressBar'
 import {prefixStyle} from 'common/js/dom'
@@ -386,22 +387,17 @@ export default{
         },
         // 获得对应的歌词
         getLyric(){
-            getLyric(this.currentSong.songid).then(res=>{
-                if(res.data.code === ERR_OK){
+            this.currentSong.getLyric().then(res=>{
                     this.isLyric = true;
-                    this.currentLyric = new Lyric(res.data.lyric,this.lyricHandler);
+                    this.currentLyric = new Lyric(res,this.lyricHandler);
                     if(this.playing){
                         this.currentLyric.play();
                     }
-                }else{
-                    this.isLyric = false;
-                    this.tips = res.data.lyric;
-                }
             })
         },
         lyricHandler({lineNum,txt}){
             this.currentLineNum = lineNum;
-            if (lineNum>7) {
+            if (lineNum>5) {
               let lineEl =  this.$refs.lyricLines[lineNum-5];
               this.$refs.lyricList.scrollToElement(lineEl,1000);
             }else{
@@ -483,7 +479,6 @@ export default{
                 const audio = this.$refs.audio;
                 newPlaying ? audio.play() : audio.pause()
                 //歌词停止还是播放
-                console.log("this.lyric",this.isLyric);
                 if (this.currentLyric && this.isLyric) {
                     this.currentLyric.togglePlay();
                 }

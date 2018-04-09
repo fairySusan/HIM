@@ -2,10 +2,14 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var fs = require("fs");
+var axios = require('axios')
+
+var apiRoutes = express.Router()
 
 // 创建 application/x-www-form-urlencoded 编码解析
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 app.use(express.static('public'));
+app.use('/api', apiRoutes)
 
 var recommend;//推荐页面数据
 var newsongList;//新歌数据
@@ -91,6 +95,30 @@ app.get('/getLyric',function(req,res){
   if (flag == 0) {
     res.send(tips);
   }
+})
+
+apiRoutes.get('/lyric', function (req, res) {
+  var url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg'
+
+  axios.get(url, {
+    headers: {
+      referer: 'https://c.y.qq.com/',
+      host: 'c.y.qq.com'
+    },
+    params: req.query
+  }).then((response) => {
+    var ret = response.data
+    if (typeof ret === 'string') {
+      var reg = /^\w+\(({[^\(\)]+})\)$/
+      var matches = response.data.match(reg)
+      if (matches) {
+        ret = JSON.parse(matches[1])
+      }
+    }
+    res.json(ret)
+  }).catch((e) => {
+    console.log(e)
+  })
 })
 
  var server = app.listen(8081, function () {

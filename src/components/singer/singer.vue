@@ -39,8 +39,8 @@
     </div>
 </template>
 <script>
-// import { getSingerList } from "api/singer";
-import {getSingerList} from 'api/index'
+import { getSingerList } from "api/singer";
+// import {getSingerList} from 'api/index'
 import {ERR_OK} from 'api/config';
 import Singer from 'common/js/singer'
 import {mapMutations} from 'vuex'

@@ -32,10 +32,22 @@ export function getSingerDetail(singermid){
     return jsonp(url,data,options);
 }
 export function getVKey(){
-    const url = 'http://c.y.qq.com/base/fcgi-bin/fcg_musicexpress.fcg'
+    const url = 'https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg'
     const data = Object.assign({},commonParams,{
-        json:3,
-        guid:3037970042
+        hostUin:0,
+        uin:0,
+        guid:3037970042,
+        platform:'yqq',
+        cid: 205361747,
+        loginUin: 0,
+        format:'json',
+        songmid: '000C0joK1H4ZMY',
+        filename: 'C4000027VNOV2JQRYA.m4a',
+        callback:'jsonpCallback'        
+
     })
+    const options={
+        param:'jsonpCallback',
+    }
     return jsonp(url,data,options);
 }
