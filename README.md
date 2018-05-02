@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # him
 
 > A Vue.js project
@@ -29,7 +28,5 @@ npm test
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
-=======
 # HIM
 基于vue的音乐播放器
->>>>>>> 1acfafa240ad9b48dd2da263e79b17890c1cc2db
