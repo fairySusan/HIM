@@ -63,11 +63,11 @@
                 <ul>
                     <li class="recommend-list" v-for="(item,index) in songList" :key="item.id" @click.stop="clickSong(item,index)">
                         <div class="item-img">
-                            <img :src="item.img" alt="专辑封面"  width="80%" height="80%">
+                            <img :src="item.imgurl" alt="专辑封面"  width="80%" height="80%">
                         </div>
                         <div class="description-text">
-                            <p v-html="item.songname"></p>
-                            <h4 v-html="item.singer" class="grayFont singername"></h4>
+                            <p v-html="item.dissname"></p>
+                            <h4 v-html="item.creator.name" class="grayFont singername"></h4>
                         </div>
                     </li>
                 </ul>
@@ -77,11 +77,11 @@
 </div>
 </template>
 <script>
-    // import {getHotRecomend} from "api/recommend";
+    import {getHotRecommend,getRecommend} from "api/recommend";
     import {ERR_OK} from 'api/config';
     import Scroll from 'base/scroll';
     import {Indicator } from 'mint-ui';
-    import {getRecommend,getHotRecommend} from 'api/index'
+    // import {getRecommend,getHotRecommend} from 'api/index'
     import {createSong} from 'common/js/song'
     import {filterSinger} from 'common/js/song'
     import {mapActions} from 'vuex'
@@ -102,7 +102,7 @@ export default {
     methods:{
         _getRecommend(){
             getRecommend().then(res => {
-                if(res.data.code ===  ERR_OK){
+                if(res.code ===  ERR_OK){
                     this.sliderList = res.data.slider;
                     this._getHotRecommend();
                 }
@@ -110,8 +110,8 @@ export default {
         },
         _getHotRecommend(){
             getHotRecommend().then(res => {
-               if (res.data.code ===  ERR_OK) {
-                 this.songList = this.normalizeNewSong(res.data.newsonglist);
+               if (res.code ===  ERR_OK) {
+                 this.songList = res.data.list;
                }
             });
         },

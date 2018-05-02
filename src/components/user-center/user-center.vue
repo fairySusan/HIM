@@ -75,7 +75,7 @@
       <div v-show="!isShowPanel">
           <ul class="list-wrap">
               <li><i class="clearAll" @click.stop="deleteAllFavorite">清空全部</i></li>
-              <li v-for="item in favoriteList" :key="item.songid">
+              <li v-for="(item,index) in favoriteList" :key="item.songid" @click="clickSong(0,index)">
                   <h6 class="songname">{{item.songname}}</h6>
                   <span class="singer grayFont">{{item.singer}}-{{item.albumname}}</span>
                   <i class="garbage-icon" @click.stop="deleteFavorite(item)"></i>
@@ -86,7 +86,7 @@
       <div v-show="isShowPanel">
           <ul class="list-wrap">
               <li><i class="clearAll" @click="deleteAllPlayHis">清空全部</i></li>
-              <li v-for="item in playHisList" :key="item.songid">
+              <li v-for="(item,index) in playHisList" :key="item.songid" @click="clickSong(1,index)">
                   <h6 class="songname">{{item.songname}}</h6>
                   <span class="singer grayFont">{{item.singer}}-{{item.albumname}}</span>
                   <i class="garbage-icon" @click="deletePlayHis(item)"></i>
@@ -97,6 +97,7 @@
 </template>
 <script>
 import { mapMutations ,mapActions,mapGetters} from "vuex";
+import {createSong} from 'common/js/song'
 export default {
   data(){
       return{
@@ -105,8 +106,6 @@ export default {
       }
   },
   mounted(){
-      console.log("mm",this.playHisList);
-       console.log("cc",this.favoriteList);
   },
   methods:{
     goBack(){
@@ -129,9 +128,35 @@ export default {
         let flag = 1;//传过去1，代表删除全部
         this.deleteFavoriteList(flag);
     },
+    playMusic(song){
+
+    },
+    // 点击歌曲事件
+    clickSong(flag,index){
+        let list = [];
+        if(flag === 0){//播放收藏列表
+            list = this.normalizeSongs(this.favoriteList);
+        }else{
+            list = this.normalizeSongs(this.playHisList);
+        }
+        this.selectPlay({
+            list:list,
+            index:index
+        })
+    },
+    normalizeSongs(list){
+        let ret = [];
+        list.forEach((item) =>{
+            if (item.songid && item.albummid) {
+                ret.push(createSong(item));
+            }
+        });
+        return ret;
+    },
     ...mapActions([
         'deletePlayHisList',
-        'deleteFavoriteList'
+        'deleteFavoriteList',
+        "selectPlay"
     ])
   },
   computed:{

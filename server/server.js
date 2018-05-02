@@ -61,42 +61,55 @@ app.all('*', function (req, res, next) {
 })
 
 /* -------------接口----------------- */
-app.get('/getRecommend',function(req,res){
-  res.send(recommend);
+// app.get('/getRecommend',function(req,res){
+//   res.send(recommend);
+// })
+// app.get('/getHotRecommend',function(req,res){
+//   res.send(newsongList);
+// })
+// app.get('/getSingerList',function(req,res){
+//   res.send(singerList);
+// })
+// app.get('/getSingerDetail',function(req,res){
+//   singerdetailList.data.forEach(element => {
+//     if (req.query.id == element.singerid) {
+//       res.send(element);
+//     }
+//   });
+// })
+// app.get('/getLyric',function(req,res){
+//   let flag = 0;
+//   let tips = {
+//     "code":1,
+//     "songname":"",
+//     "songid":"",
+//     "lyric":"暂无歌词"
+//   }
+//   lyric.data.forEach(element => {
+//     if (req.query.id == element.songid) {
+//       res.send(element);
+//       flag = 1;
+//       return;
+//     }
+//   });
+//   if (flag == 0) {
+//     res.send(tips);
+//   }
+// })
+apiRoutes.get('/getHotRecommend', function (req, res) {
+  var url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
+  axios.get(url, {
+    headers: {
+      referer: 'https://c.y.qq.com/',
+      host: 'c.y.qq.com'
+    },
+    params: req.query
+  }).then((response) => {
+    res.json(response.data)
+  }).catch((e) => {
+    console.log(e)
+  })
 })
-app.get('/getHotRecommend',function(req,res){
-  res.send(newsongList);
-})
-app.get('/getSingerList',function(req,res){
-  res.send(singerList);
-})
-app.get('/getSingerDetail',function(req,res){
-  singerdetailList.data.forEach(element => {
-    if (req.query.id == element.singerid) {
-      res.send(element);
-    }
-  });
-})
-app.get('/getLyric',function(req,res){
-  let flag = 0;
-  let tips = {
-    "code":1,
-    "songname":"",
-    "songid":"",
-    "lyric":"暂无歌词"
-  }
-  lyric.data.forEach(element => {
-    if (req.query.id == element.songid) {
-      res.send(element);
-      flag = 1;
-      return;
-    }
-  });
-  if (flag == 0) {
-    res.send(tips);
-  }
-})
-
 apiRoutes.get('/lyric', function (req, res) {
   var url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg'
 

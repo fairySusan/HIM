@@ -175,10 +175,15 @@
     }
 </style>
 <template>
-    <div class="player clearfix" v-if="playList.length>0">
-<!-- 全屏的播放器 -->
-    <transition name="normal">
-        <div id="screen-player" class="cover"  v-if="fullScreen" ref="screenPlayer">
+    <div class="player" v-if="playList.length>0">
+    <!-- 全屏的播放器 -->
+    <transition name="normal"
+                @enter="enter"
+                @after-enter="afterEnter"
+                @leave="leave"
+                @after-leave="afterLeave"
+                >
+        <div id="screen-player" class="cover"  v-if="fullScreen"  ref="screenPlayer">
             <img class="blurBack cover" :src="currentSong.img" alt="">
             <div class="mask"></div>
             <div class="des-title">
@@ -193,7 +198,7 @@
             class="middle"  
             @touchstart.prevent="movetouchstart"
             @touchmove.prevent="movetouch"
-            @touchend.prevent="movetouchend">
+            @touchend="movetouchend">
                 <div class="middle-l" ref="middleL">
                     <div class="lyric-img" ref="lyricImg" :style="{animationPlayState:isRotate}">
                         <img :src="currentSong.img" alt="专辑封面" width="80%" height="80%">
@@ -222,18 +227,18 @@
                     <button class="last-icon" @click="playLast"></button>
                     <button v-bind:class="playing ? 'stop-icon' : 'play-icon'" @click="togglePlaying"></button>
                     <button class="next-icon" @click="playNext"></button>
-                    <button :class="isLikeClass" @click="favoriteSong"></button>
+                    <button :class="getFavoriteIcon(currentSong)" @click="toggleFavoriteSong(currentSong)"></button>
                 </div>
             </div>
         </div>
     </transition>
 
 <!-- mini的播放器 -->
-    <transition class="mini">
+    <transition name="mini">
         <div id="mini-player" v-if="!fullScreen" @click="clickMini">
             <!-- 播放历史列表 -->
             <played-list v-show="isDisplay" @close="closePlayHis()"></played-list>
-            <div class="minilyric-img fl" ref="lyricImg" :style="{animationPlayState:isRotate}">
+            <div class="minilyric-img fl"  :style="{animationPlayState:isRotate}">
                 <img :src="currentSong.img" alt="专辑封面" width="100%" height="100%">
             </div>
             <div class="text fl">
@@ -320,7 +325,7 @@ export default{
                 animation,
                 presets:{
                     duration:400,
-                    easing:'line'
+                    easing:'linear'
                 }
             });
             animations.runAnimation(this.$refs.lyricImg,'move',done);
@@ -332,9 +337,12 @@ export default{
         leave(el,done){
             this.$refs.lyricImg.style.transition = 'all 0.4s';
             const {x,y,scale} = this.getPosAndScale();
+            this.$refs.lyricImg.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale})`
+            this.$refs.lyricImg.addEventListener('transitionend', done)
         },
-        leaveEnter(el,done){
-
+        afterLeave(el,done){
+            this.$refs.lyricImg.style.transition = ''
+            this.$refs.lyricImg.style[transform] = ''
         },
         getPosAndScale(){
             const targetWidth = 50;
@@ -364,13 +372,37 @@ export default{
         },
         //上一首播放按钮点击事件
         playLast(){
-            let index =  this.currentIndex>0 ? this.currentIndex-1:this.playList.length-1;
-            this.setCurrentIndex(index);
+            if (this.playList.length === 1) {
+                this.loop()
+                return
+            } else{
+                let index =  this.currentIndex>0 ? this.currentIndex-1:this.playList.length-1;
+                this.setCurrentIndex(index);
+                if (!this.playing) {
+                    this.togglePlaying()
+                }
+            }
         },
         //下一首播放按钮点击事件
         playNext(){
-            let index = this.currentIndex>=(this.playList.length-1)? 0 : (this.currentIndex+1);
-            this.setCurrentIndex(index);
+            if (this.playList.length === 1) {
+                this.loop()
+                return
+            } else{
+                let index = this.currentIndex>=(this.playList.length-1)? 0 : (this.currentIndex+1);
+                this.setCurrentIndex(index);
+                if (!this.playing) {
+                    this.togglePlaying()
+                }
+            } 
+        },
+        loop() {
+            this.$refs.audio.currentTime = 0
+            this.$refs.audio.play()
+            this.setPlaying(true)
+            if (this.currentLyric) {
+            this.currentLyric.seek(0)
+            }
         },
         // 显示播放历史列表组件
         showPlayHis(){
@@ -381,9 +413,24 @@ export default{
             this.isDisplay = false;
         },
         // 点击收藏按钮收藏这首歌
-        favoriteSong(){
-            this.saveFavoriteList(this.currentSong);
-            this.setLikeState(!this.isLike);
+        isFavorite(song) {
+            const index = this.favoriteList.findIndex((item) => {
+                return item.id === song.id
+            })
+            return index > -1
+        },
+        toggleFavoriteSong(song){
+            if (this.isFavorite(song)){
+                deleteFavoriteList(song);
+            }else{
+                this.saveFavoriteList(song);
+            }
+        },
+        getFavoriteIcon(song){
+            if (this.isFavorite(song)) {
+                return 'like-icon'
+            }
+            return 'nolike-icon'
         },
         // 获得对应的歌词
         getLyric(){
@@ -399,7 +446,9 @@ export default{
             this.currentLineNum = lineNum;
             if (lineNum>5) {
               let lineEl =  this.$refs.lyricLines[lineNum-5];
-              this.$refs.lyricList.scrollToElement(lineEl,1000);
+              this.$nextTick(function(){
+                   this.$refs.lyricList.scrollToElement(lineEl,1000);
+              })
             }else{
                 this.$refs.lyricList.scrollTo(0,0,1000);
             }
@@ -407,6 +456,8 @@ export default{
         //歌词页面和播放页面左右滑动
         movetouchstart(e){
             this.touch.initiated = true;
+             // 用来判断是否是一次移动
+            this.touch.moved = false
             const touch =  e.touches[0];
             this.touch.startX = touch.pageX;
             this.touch.startY = touch.pageY;
@@ -421,6 +472,9 @@ export default{
             if(Math.abs(deltaX)<Math.abs(deltaY)){
                 return;
             }
+            if (!this.touch.moved) {
+                this.touch.moved = true
+            }
             const left = this.currentShow === 0 ? 0 : -window.innerWidth;
             const offsetWidth =Math.min(0,Math.max(-window.innerWidth,left+deltaX));
             this.touch.percent = Math.abs(offsetWidth / window.innerWidth)
@@ -430,7 +484,36 @@ export default{
             this.$refs.middleL.style[transitionDuration] = 0
         },
         movetouchend(e){
-            this.touch.initiated = false;
+            if (!this.touch.moved) {
+                return
+            }
+            let offsetWidth
+            let opacity
+            if (this.currentShow === 0) {
+            if (this.touch.percent > 0.1) {
+                offsetWidth = -window.innerWidth
+                opacity = 0
+                this.currentShow = '1'
+            } else {
+                offsetWidth = 0
+                opacity = 1
+            }
+            } else {
+            if (this.touch.percent < 0.9) {
+                offsetWidth = 0
+                this.currentShow = 0
+                opacity = 1
+            } else {
+                offsetWidth = -window.innerWidth
+                opacity = 0
+            }
+        }
+        const time = 300
+        this.$refs.lyricList.$el.style[transform] = `translate3d(${offsetWidth}px,0,0)`
+        this.$refs.lyricList.$el.style[transitionDuration] = `${time}ms`
+        this.$refs.middleL.style.opacity = opacity
+        this.$refs.middleL.style[transitionDuration] = `${time}ms`
+        this.touch.initiated = false
         },
         percentChange(percent){
             this.$refs.audio.currentTime = this.totalTime*percent;
@@ -443,6 +526,7 @@ export default{
         }),
         ...mapActions([
             'saveFavoriteList',
+            'deleteFavoriteList',
             'savePlayHisList'
         ])
     },
@@ -450,11 +534,11 @@ export default{
         ...mapGetters([
             'fullScreen',
             'playList',
+            'favoriteList',
             'currentSong',
             'playing',
             'currentIndex',
-            'mode',
-            'isLike'
+            'mode'
         ])
     },
     watch:{
@@ -494,9 +578,6 @@ export default{
             }else if(mode === 2){
                 return this.playModeClass = 'random-icon';
             }
-        },
-        isLike(){
-            this.isLikeClass =  this.isLike ? 'like-icon' : 'nolike-icon';
         }
     },
     filters:{

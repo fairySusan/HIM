@@ -10,8 +10,8 @@ export  function getRecommend(){
     })
     return jsonp(url,data,options);
 }
-export function getHotRecomend(){
-    const url = '/api/getHotRecomend';
+export function getHotRecommend(){
+    const url = '/api/getHotRecommend';
     const data = Object.assign({},commonParams,{
         platform:'yqq',
         uin:0,
@@ -23,7 +23,7 @@ export function getHotRecomend(){
         sortId:5,
         format:'json'
     })
-    return axios.get('/getHotRecomend',{
+    return axios.get(url,{
         params:data
     }).then(res=>{
         return Promise.resolve(res.data)

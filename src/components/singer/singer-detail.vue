@@ -22,8 +22,8 @@
 </template>
 <script>
 import {mapGetters} from 'vuex';
-// import { getSingerDetail,getVKey } from "api/singer";
-import {getSingerDetail} from 'api/index'
+import { getSingerDetail,getVKey } from "api/singer";
+// import {getSingerDetail} from 'api/index'
 import {ERR_OK} from 'api/config'
 import {createSong} from 'common/js/song'
 import musicList from '../common/musiclist'
@@ -50,16 +50,16 @@ export default {
     },
     methods:{
         _getSingerDetail(){
-            if (!this.singer.id) {
+            if (!this.singer.mid) {
                 this.$router.push('/singer');
                 return;
             }
-            getSingerDetail(this.singer.id).then(res =>{
-                if(res.data.code ===  ERR_OK){
+            getSingerDetail(this.singer.mid).then(res =>{
+                if(res.code ===  ERR_OK){
                     this.musicData = this.normalizeSongs(res.data.list);
-                    this.singerImg = `http://127.0.0.1:8081/singerimg/${res.data.singermid}`
+                    this.singerImg = `https://y.gtimg.cn/music/photo_new/T001R300x300M000${res.data.singer_mid}.jpg?max_age=2592000`
                     this.singerInfo.imgUrl = this.singerImg;
-                    this.singerInfo.title = res.singername;
+                    this.singerInfo.title = res.data.singer_name;
                 }
             })
         },
@@ -73,8 +73,8 @@ export default {
         normalizeSongs(list){
             let ret = [];
             list.forEach((item) =>{
-                let musicDataItem = item;
-                if (musicDataItem.songid) {
+                let musicDataItem = item.musicData;
+                if (musicDataItem.songmid && musicDataItem.songid) {
                     ret.push(createSong(musicDataItem));
                 }
             });

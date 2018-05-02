@@ -57,7 +57,7 @@ export default {
     methods:{
         _getSingerList(){
             getSingerList().then(res=>{
-                if(res.data.code ===  ERR_OK){
+                if(res.code ===  ERR_OK){
                     this.singerList = this.sortSinger(res.data.list);
                 }
             })
@@ -75,12 +75,11 @@ export default {
             singerList.forEach((item,index)=>{
                 if(index<HOT_SINGER_LEN){
                     map.hot.items.push(new Singer({
-                        mid:item.singermid,
-                        name:item.singername,
-                        id:item.singerid
+                        mid:item.Fsinger_mid,
+                        name:item.Fsinger_name,
                     }))
                 }
-                const key = item.index;
+                const key = item.Findex;
             // 如果没有key字母，创建一个以key字母为标识的对象
                 if(!map[key]){
                     map[key] = {
@@ -89,9 +88,8 @@ export default {
                     }
                 }
                 map[key].items.push(new Singer({
-                    mid:item.singermid,
-                    name:item.singername,
-                    id:item.singerid
+                    mid:item.Fsinger_mid,
+                    name:item.Fsinger_name
                 }))
             });
             //把分好组的数组进行A~Z的顺序排序
@@ -113,7 +111,7 @@ export default {
         //歌手详情页的跳转
         clickSingerItem(item){
             this.$router.push({
-                path:`/singer/${item.id}`
+                path:`/singer/${item.mid}`
             })
             this.setSinger(item);
         },

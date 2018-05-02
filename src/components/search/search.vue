@@ -75,7 +75,7 @@
           <h6 class="his-Title grayFont fl">搜索历史</h6>
           <h6 class="clearHis grayFont fr" @click="clearAllHistory()">清除历史</h6>
           <ul class="clearfix">
-            <li class="history-list" v-if="historyList.length>0" v-for="item in historyList" :key="item.songid">
+            <li class="history-list" @click="clickSong(item,index)"  v-if="historyList.length>0" v-for="(item,index) in historyList" :key="item.songid">
               <div class="text">
                   <span class="song-name">{{item.songname}}</span>
                   <i class="cancel-tag fr grayFont" @click="clearSingleHis(item)">x</i>
@@ -143,6 +143,21 @@ export default {
     clearSingleHis(item){
       this.clearSearchHistory(item);
       this.historyList = state.searchHistory;
+    },
+    clickSong(item,index){
+      this.selectPlay({
+          list:this.normalizeSongs(this.historyList),
+          index:index
+      })
+    },
+    normalizeSongs(list){
+        let ret = [];
+        list.forEach((item) =>{
+            if (item.songid && item.albummid) {
+                ret.push(createSong(item));
+            }
+        });
+        return ret;
     }
   }
 }

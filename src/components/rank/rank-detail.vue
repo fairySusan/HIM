@@ -26,7 +26,7 @@ import {mapGetters} from 'vuex';
 import {getRankDetail} from 'api/rank'
 import {getVKey} from 'api/singer'
 import {ERR_OK} from 'api/config';
-import {createRankSong} from 'common/js/song'
+import {createSong} from 'common/js/song'
 import musicList from '../common/musiclist'
 import { Indicator } from 'mint-ui';
 
@@ -77,7 +77,7 @@ export default {
             list.forEach((item) =>{
                 let musicDataItem = item.data;
                 if (musicDataItem.songid && musicDataItem.albummid) {
-                    ret.push(createRankSong(musicDataItem,this.key));
+                    ret.push(createSong(musicDataItem));
                 }
             });
             return ret;

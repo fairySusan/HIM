@@ -46,7 +46,7 @@
   <div id="playHistoryList">
       <ul class="list-wrap">
           <li class="deleteAll-btn" @click.stop="deleteAll">全部删除</li>
-          <li v-for="item in playHisList" :key="item.songid">
+          <li v-for="(item,index) in playHisList" :key="item.songid" @click.stop="clickSong(item,index)">
               <span class="song-name">{{item.songname}}</span><span class="singer-name grayFont">-{{item.singer}}</span>
               <i class="garbage-icon" @click.stop="deleteFavorite(item)"></i>
           </li>
@@ -78,6 +78,21 @@ export default {
             let flag = 1;//传过去1，代表删除全部
             this.deletePlayHisList(flag);
             console.log("删除全部")
+        },
+        clickSong(item,index){
+            this.selectPlay({
+                list:this.normalizeSongs(this.playHisList),
+                index:index
+            })
+        },
+        normalizeSongs(list){
+            let ret = [];
+            list.forEach((item) =>{
+                if (item.songid && item.albummid) {
+                    ret.push(createSong(item));
+                }
+            });
+            return ret;
         },
         ...mapActions([
             'deletePlayHisList'
