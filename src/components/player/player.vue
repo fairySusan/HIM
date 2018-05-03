@@ -117,6 +117,7 @@
                    margin-top:10px;
                   .order-icon,
                   .random-icon,
+                  .loop-icon,
                   .last-icon,
                   .next-icon,
                   .play-icon,
@@ -438,10 +439,12 @@ export default{
         selectMode(){
             const mode = (this.mode + 1) % 3;
             this.setMode(mode);
-            let list = null;
+            let list = [];
             if (mode === playMode.random){
                 list = shuffle(this.sequenceList);
-            }else {
+            }else if(mode === playMode.loop){
+                list.push(this.currentSong);
+            }else{
                 list = this.sequenceList
             }
             this.resetCurrentIndex(list);
@@ -449,7 +452,7 @@ export default{
         },
         resetCurrentIndex(list) {
             let index = list.findIndex((item) => {
-                return item.id === this.currentSong.id
+                return item.songid === this.currentSong.songid
             })
             this.setCurrentIndex(index)
         },

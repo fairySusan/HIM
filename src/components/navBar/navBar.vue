@@ -5,7 +5,7 @@
 <template>
   <ul class="navBar">
     <li>
-      首页
+      <router-link to="/recommend">首页</router-link>
     </li>
     <li>
       <router-link to="/singer">歌手</router-link>
