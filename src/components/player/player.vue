@@ -188,7 +188,7 @@
             <img class="blurBack cover" :src="currentSong.img" alt="">
             <div class="mask"></div>
             <div class="des-title">
-                <i class="arrow-icon slide-down" @click="clickReturn()"></i>
+                <i class="arrow-icon slide-down" @click="clickReturn"></i>
                 <div class="title-wrap"> 
                     <span class="song-name">{{currentSong.songname}}</span>
                     <h6 class="singer-name">{{currentSong.singer}}</h6>
@@ -305,10 +305,12 @@ export default{
         //点击返回按钮隐藏全屏播放器
         clickReturn(){
             this.SetFullScreen(false);
+            console.log("fullScreen:",this.fullScreen);
         },
         //点击mini播放器显示全屏播放器
         clickMini(){
              this.SetFullScreen(true);
+             console.log("2",this.fullScreen);
         },
         enter(el,done){
             const {x,y,scale} = this.getPosAndScale();
@@ -418,7 +420,7 @@ export default{
         // 点击收藏按钮收藏这首歌
         isFavorite(song) {
             const index = this.favoriteList.findIndex((item) => {
-                return item.id === song.id
+                return item.songid === song.songid
             })
             return index > -1
         },
@@ -432,8 +434,9 @@ export default{
         getFavoriteIcon(song){
             if (this.isFavorite(song)) {
                 return 'like-icon'
+            }else{
+                return 'nolike-icon'
             }
-            return 'nolike-icon'
         },
         //选择播放模式
         selectMode(){

@@ -1,44 +1,49 @@
 /* 歌曲详情页通用组件 */
 <style lang='less'>
 @import '../../assets/less/var.less';
-    .musiclist{
-        .singer-des{
-            position:relative;
-            .singer-name{
-                position:absolute;
-                top:5%;
-                right:0;
-                bottom:0;
-                left:0;
-                text-align:center;
-                font-size:24px;
-                color:white;
-                .return-icon{
+    .scroll{
+            height: 100%;
+            overflow:hidden;
+        .musiclist{
+            .singer-des{
+                position:relative;
+                .singer-name{
                     position:absolute;
-                    left:10px;
+                    top:5%;
+                    right:0;
+                    bottom:0;
+                    left:0;
+                    text-align:center;
+                    font-size:24px;
+                    color:white;
+                    .return-icon{
+                        position:absolute;
+                        left:10px;
+                    }
+                }
+                .singer-img{
+                    height:9rem;
+                    overflow:hidden;
                 }
             }
-            .singer-img{
-                height:9rem;
-                overflow:hidden;
-            }
-        }
-        .songs-list{
-            margin:20px;
-            .song-item{
-                background:#fff;
-                padding:5px 0;
-                border-bottom:1px solid @underlineColor;
-                .des-text{
-                    font-size:12px;
+            .songs-list{
+                margin:20px;
+                .song-item{
+                    background:#fff;
+                    padding:5px 0;
+                    border-bottom:1px solid @underlineColor;
+                    .des-text{
+                        font-size:12px;
+                    }
                 }
+            
             }
-           
         }
     }
 </style>
 <template>
-    <div class="musiclist">
+<scroll  :data="songList" class="scroll" :pullup="pullup">
+<div class="musiclist">
         <!-- 歌手简介 -->
         <div class="singer-des">
             <h6 class="singer-name">
@@ -59,14 +64,17 @@
             </li>
         </ul>
     </div>
+</scroll>
 </template>
 <script>
 import {mapActions} from 'vuex'
+import Scroll from 'base/scroll';
 export default{
+    components:{Scroll},
     props:["songList","detailInfo"],
     data(){
         return{
-
+            pullup:true
         }
     },
     created(){

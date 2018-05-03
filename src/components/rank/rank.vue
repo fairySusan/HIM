@@ -10,7 +10,7 @@
     .rank{
       height: 100%;
       .rank-ul{
-        margin:10px;
+        margin:0 10px 10px 10px;
         .rank-list{
           display: flex;
           display: -webkit-flex;
@@ -74,16 +74,15 @@
           <span class="go-icon"></span>
         </li>
       </ul>
-      <router-view></router-view>
     </div>
   </scroll>
+  <router-view></router-view>
 </div>
 </template>
 <script>
 import { getRankList } from "api/rank";
 import {ERR_OK} from 'api/config';
 import {mapMutations} from 'vuex'
-import BScroll from 'better-scroll'
 import { Indicator } from 'mint-ui';
 import Scroll from 'base/scroll';
 
