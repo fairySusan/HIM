@@ -177,85 +177,85 @@
 </style>
 <template>
     <div class="player" v-if="playList.length>0">
-    <!-- 全屏的播放器 -->
-    <transition name="normal"
-                @enter="enter"
-                @after-enter="afterEnter"
-                @leave="leave"
-                @after-leave="afterLeave"
-                >
-        <div id="screen-player" class="cover"  v-if="fullScreen"  ref="screenPlayer">
-            <img class="blurBack cover" :src="currentSong.img" alt="">
-            <div class="mask"></div>
-            <div class="des-title">
-                <i class="arrow-icon slide-down" @click="clickReturn"></i>
-                <div class="title-wrap"> 
-                    <span class="song-name">{{currentSong.songname}}</span>
-                    <h6 class="singer-name">{{currentSong.singer}}</h6>
-                </div>
-            </div>
-
-            <div
-            class="middle"  
-            @touchstart.prevent="movetouchstart"
-            @touchmove.prevent="movetouch"
-            @touchend="movetouchend">
-                <div class="middle-l" ref="middleL">
-                    <div class="lyric-img" ref="lyricImg" :style="{animationPlayState:isRotate}">
-                        <img :src="currentSong.img" alt="专辑封面" width="80%" height="80%">
+        <!-- 全屏的播放器 -->
+        <transition name="normal"
+                    @enter="enter"
+                    @after-enter="afterEnter"
+                    @leave="leave"
+                    @after-leave="afterLeave"
+                    >
+            <div id="screen-player" class="cover"  v-if="fullScreen"  ref="screenPlayer">
+                <img class="blurBack cover" :src="currentSong.img" alt="">
+                <div class="mask"></div>
+                <div class="des-title">
+                    <i class="arrow-icon slide-down" @click="clickReturn"></i>
+                    <div class="title-wrap"> 
+                        <span class="song-name">{{currentSong.songname}}</span>
+                        <h6 class="singer-name">{{currentSong.singer}}</h6>
                     </div>
                 </div>
 
-                <!-- 歌词部分 -->
-                <scroll  class="middle-r"  ref="lyricList" :data="currentLyric.lines">
-                    <div class="lyric-wrap">
-                        <p ref="lyricLines" v-if="isLyric" v-for="(item,index) in currentLyric.lines" :class="{'current-line':currentLineNum==index}">{{item.txt}}</p>
-                        <p v-if="!isLyric">{{tips}}</p>
+                <div
+                class="middle"  
+                @touchstart.prevent="movetouchstart"
+                @touchmove.prevent="movetouch"
+                @touchend="movetouchend">
+                    <div class="middle-l" ref="middleL">
+                        <div class="lyric-img" ref="lyricImg" :style="{animationPlayState:isRotate}">
+                            <img :src="currentSong.img" alt="专辑封面" width="80%" height="80%">
+                        </div>
                     </div>
-                </scroll>
-            </div>
-            
-            <!-- 下面的工具栏 -->
-            <div class="play-time">
-                <span>{{currentTime | filterTime}}/{{totalTime | filterTime}}</span>
-            </div>
-            <div class="tools-bar">
-                <div>
-                    <progress-bar :percent="percent" @percentChange="percentChange"></progress-bar>
-                </div>
-                <div class="tools-btns">
-                    <button :class="playModeClass" @click="selectMode"></button>
-                    <button class="last-icon" @click="playLast"></button>
-                    <button v-bind:class="playing ? 'stop-icon' : 'play-icon'" @click="togglePlaying"></button>
-                    <button class="next-icon" @click="playNext"></button>
-                    <button :class="getFavoriteIcon(currentSong)" @click="toggleFavoriteSong(currentSong)"></button>
-                </div>
-            </div>
-        </div>
-    </transition>
 
-<!-- mini的播放器 -->
-    <transition name="mini">
-        <div id="mini-player" v-if="!fullScreen" @click="clickMini">
-            <!-- 播放历史列表 -->
-            <played-list v-show="isDisplay" @close="closePlayHis()"></played-list>
-            <div class="minilyric-img fl"  :style="{animationPlayState:isRotate}">
-                <img :src="currentSong.img" alt="专辑封面" width="100%" height="100%">
+                    <!-- 歌词部分 -->
+                    <scroll  class="middle-r"  ref="lyricList" :data="currentLyric.lines">
+                        <div class="lyric-wrap">
+                            <p ref="lyricLines" v-if="isLyric" v-for="(item,index) in currentLyric.lines" :class="{'current-line':currentLineNum==index}">{{item.txt}}</p>
+                            <p v-if="!isLyric">{{tips}}</p>
+                        </div>
+                    </scroll>
+                </div>
+                
+                <!-- 下面的工具栏 -->
+                <div class="play-time">
+                    <span>{{currentTime | filterTime}}/{{totalTime | filterTime}}</span>
+                </div>
+                <div class="tools-bar">
+                    <div>
+                        <progress-bar :percent="percent" @percentChange="percentChange"></progress-bar>
+                    </div>
+                    <div class="tools-btns">
+                        <button :class="playModeClass" @click="selectMode"></button>
+                        <button class="last-icon" @click="playLast"></button>
+                        <button v-bind:class="playing ? 'stop-icon' : 'play-icon'" @click="togglePlaying"></button>
+                        <button class="next-icon" @click="playNext"></button>
+                        <button :class="getFavoriteIcon(currentSong)" @click="toggleFavoriteSong(currentSong)"></button>
+                    </div>
+                </div>
             </div>
-            <div class="text fl">
-               <h6 class="song-name">{{currentSong.songname}}</h6>
-               <span class="singer-name grayFont">{{currentSong.singer}}</span> 
+        </transition>
+
+        <!-- mini的播放器 -->
+        <transition name="mini">
+            <div id="mini-player" v-if="!fullScreen" @click="clickMini">
+                <!-- 播放历史列表 -->
+                <played-list v-show="isDisplay" @close="closePlayHis()"></played-list>
+                <div class="minilyric-img fl"  :style="{animationPlayState:isRotate}">
+                    <img :src="currentSong.img" alt="专辑封面" width="100%" height="100%">
+                </div>
+                <div class="text fl">
+                <h6 class="song-name">{{currentSong.songname}}</h6>
+                <span class="singer-name grayFont">{{currentSong.singer}}</span> 
+                </div>
+                <div class="icon-btn">
+                    <button :class="['state-btn',playing?'stop-mini':'play-mini']" @click.stop="togglePlaying"></button>
+                    <button class="list-btn playList-icon" @click.stop="showPlayHis()"></button>
+                </div>
             </div>
-            <div class="icon-btn">
-                <button :class="['state-btn',playing?'stop-mini':'play-mini']" @click.stop="togglePlaying"></button>
-                <button class="list-btn playList-icon" @click.stop="showPlayHis()"></button>
-            </div>
-        </div>
-    </transition>
-    <audio ref="audio" :src="currentSong.url" @timeupdate="updataTime" @canplay="getTotalTime">
-        <source :src="currentSong.url" type="audio/mpeg">
-        您的浏览器不支持 audio 元素。
-    </audio>
+        </transition>
+        <audio ref="audio" :src="currentSong.url" @timeupdate="updataTime" @canplay="getTotalTime">
+            <source :src="currentSong.url" type="audio/mpeg">
+            您的浏览器不支持 audio 元素。
+        </audio>
     </div>
 </template>
 <script>
@@ -304,7 +304,9 @@ export default{
     methods:{
         //点击返回按钮隐藏全屏播放器
         clickReturn(){
-            this.SetFullScreen(false);
+            this.$nextTick(function(){
+                this.SetFullScreen(false);
+            })
             console.log("fullScreen:",this.fullScreen);
         },
         //点击mini播放器显示全屏播放器
@@ -316,13 +318,13 @@ export default{
             const {x,y,scale} = this.getPosAndScale();
             let animation = {
                 0:{
-                    transform:'translate3d(${x}px,${y}px,0) scale(${scale})'
+                    transform:`translate3d(${x}px,${y}px,0) scale(${scale})`
                 },
                 60:{
-                    transform:'translate3d(0,0,0) scale(1.1)'
+                    transform:`translate3d(0,0,0) scale(1.1)`
                 },
                 100:{
-                    transform:'translate3d(0,0,0) scale(1)'
+                    transform:`translate3d(0,0,0) scale(1)`
                 }
             }
             animations.registerAnimation({
@@ -342,7 +344,7 @@ export default{
         leave(el,done){
             this.$refs.lyricImg.style.transition = 'all 0.4s';
             const {x,y,scale} = this.getPosAndScale();
-            this.$refs.lyricImg.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale})`
+            this.$refs.lyricImg.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale})`;
             this.$refs.lyricImg.addEventListener('transitionend', done)
         },
         afterLeave(el,done){
@@ -351,13 +353,13 @@ export default{
         },
         getPosAndScale(){
             const targetWidth = 50;
-            const paddingLeft = 35;
+            const paddingLeft = 40;
             const paddingBottom = 30;
             const paddingTop = 80;
             const width = window.innerWidth*0.8;
             const scale = targetWidth/width;
             const x = -(window.innerWidth/2-paddingLeft);
-            const y = window.innerHeight-paddingTop-width/2-paddingBottom;
+            const y = window.innerHeight - paddingTop- width/2 - paddingBottom;
             return {x,y,scale}
         },
         // 更新歌曲播放的时间
@@ -607,6 +609,13 @@ export default{
                 return this.playModeClass = 'loop-icon';
             }else if(mode === 2){
                 return this.playModeClass = 'random-icon';
+            }
+        },
+        fullScreen(newVal) {
+            if (newVal) {
+                setTimeout(() => {
+                    this.$refs.lyricList.refresh()
+                }, 20)
             }
         }
     },
