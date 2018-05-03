@@ -5,7 +5,7 @@
 <template>
   <ul class="navBar">
     <li>
-      <router-link to="/recommend">首页</router-link>
+      首页
     </li>
     <li>
       <router-link to="/singer">歌手</router-link>
@@ -26,6 +26,7 @@ export default {
     }
   },
   mounted(){
+    this.$router.push('/recommend');
   },
   methods:{
   }

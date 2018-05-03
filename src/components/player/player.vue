@@ -223,7 +223,7 @@
                     <progress-bar :percent="percent" @percentChange="percentChange"></progress-bar>
                 </div>
                 <div class="tools-btns">
-                    <button :class="playModeClass"></button>
+                    <button :class="playModeClass" @click="selectMode"></button>
                     <button class="last-icon" @click="playLast"></button>
                     <button v-bind:class="playing ? 'stop-icon' : 'play-icon'" @click="togglePlaying"></button>
                     <button class="next-icon" @click="playNext"></button>
@@ -266,6 +266,8 @@ import animations from 'create-keyframe-animation'
 import progressBar from 'base/progressBar'
 import {prefixStyle} from 'common/js/dom'
 import playedList from '../common/playedList'
+import {playMode} from 'common/js/config'
+import {shuffle} from 'common/js/util'
 import Lyric from 'lyric-parser'
 import Scroll from 'base/scroll'
 
@@ -421,7 +423,7 @@ export default{
         },
         toggleFavoriteSong(song){
             if (this.isFavorite(song)){
-                deleteFavoriteList(song);
+                this.deleteFavoriteList(song);
             }else{
                 this.saveFavoriteList(song);
             }
@@ -431,6 +433,25 @@ export default{
                 return 'like-icon'
             }
             return 'nolike-icon'
+        },
+        //选择播放模式
+        selectMode(){
+            const mode = (this.mode + 1) % 3;
+            this.setMode(mode);
+            let list = null;
+            if (mode === playMode.random){
+                list = shuffle(this.sequenceList);
+            }else {
+                list = this.sequenceList
+            }
+            this.resetCurrentIndex(list);
+            this.setPlaylist(list);
+        },
+        resetCurrentIndex(list) {
+            let index = list.findIndex((item) => {
+                return item.id === this.currentSong.id
+            })
+            this.setCurrentIndex(index)
         },
         // 获得对应的歌词
         getLyric(){
@@ -522,7 +543,9 @@ export default{
             SetFullScreen: 'SET_FULL_SCREEN',
             setPlaying:'SET_PLAYING',
             setCurrentIndex:'SET_CURRENT_INDEX',
-            setLikeState:'SET_LIKE_STATE'
+            setLikeState:'SET_LIKE_STATE',
+            setMode:'SET_MODE',
+            setPlaylist:'SET_PLAY_LIST'
         }),
         ...mapActions([
             'saveFavoriteList',
@@ -538,7 +561,8 @@ export default{
             'currentSong',
             'playing',
             'currentIndex',
-            'mode'
+            'mode',
+            'sequenceList'
         ])
     },
     watch:{
@@ -570,7 +594,7 @@ export default{
                 this.isRotate = newPlaying?'running':'paused';
             })
         },
-        mode(){
+        mode(mode){
             if (mode === 0) {
                 return this.playModeClass = 'order-icon';
             }else if(mode === 1){
