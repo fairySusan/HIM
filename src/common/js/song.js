@@ -30,18 +30,18 @@ export default class Song{
     })
   }
 } 
-// export function createSong(musicItem){
-//   return new Song({
-//     songid:musicItem.songid,//歌曲id
-//     albummid:musicItem.albummid,//专辑id
-//     singer: filterSinger(musicItem.singer),//演唱者
-//     songname: musicItem.songname,//歌曲名
-//     albumname: musicItem.albumname,//专辑名
-//     duration: musicItem.interval,//歌曲时长
-//     img: `http://127.0.0.1:8081/${musicItem.picid}`,
-//     url:`http://127.0.0.1:8081/songs/${musicItem.songid}.mp3`
-//   })
-// }
+export function createNewSong(musicItem){
+  return new Song({
+    songid:musicItem.songid,//歌曲id
+    albummid:musicItem.albummid,//专辑id
+    singer: filterSinger(musicItem.singer),//演唱者
+    songname: musicItem.songname,//歌曲名
+    albumname: musicItem.albumname,//专辑名
+    duration: musicItem.interval,//歌曲时长
+    img: `http://127.0.0.1:8081/${musicItem.picid}`,
+    url:`http://127.0.0.1:8081/songs/${musicItem.songid}.mp3`
+  })
+}
 export function createSong(musicItem){
   return new Song({
     songid:musicItem.songid,//歌曲id

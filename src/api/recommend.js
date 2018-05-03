@@ -11,7 +11,7 @@ export  function getRecommend(){
     return jsonp(url,data,options);
 }
 export function getHotRecommend(){
-    const url = '/api/getHotRecommend';
+    const url = '/getHotRecommend';
     const data = Object.assign({},commonParams,{
         platform:'yqq',
         uin:0,

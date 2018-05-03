@@ -181,10 +181,9 @@
         <transition name="normal"
                     @enter="enter"
                     @after-enter="afterEnter"
-                    @leave="leave"
                     @after-leave="afterLeave"
                     >
-            <div id="screen-player" class="cover"  v-if="fullScreen"  ref="screenPlayer">
+            <div id="screen-player" class="cover"  v-show="fullScreen"  ref="screenPlayer">
                 <img class="blurBack cover" :src="currentSong.img" alt="">
                 <div class="mask"></div>
                 <div class="des-title">
@@ -236,7 +235,7 @@
 
         <!-- mini的播放器 -->
         <transition name="mini">
-            <div id="mini-player" v-if="!fullScreen" @click="clickMini">
+            <div id="mini-player" v-show="!fullScreen" @click="clickMini">
                 <!-- 播放历史列表 -->
                 <played-list v-show="isDisplay" @close="closePlayHis()"></played-list>
                 <div class="minilyric-img fl"  :style="{animationPlayState:isRotate}">
@@ -252,7 +251,7 @@
                 </div>
             </div>
         </transition>
-        <audio ref="audio" :src="currentSong.url" @timeupdate="updataTime" @canplay="getTotalTime">
+        <audio ref="audio" :src="currentSong.url" @play="ready" @error="error" @timeupdate="updataTime" @canplay="getTotalTime" @ended="playEnd">
             <source :src="currentSong.url" type="audio/mpeg">
             您的浏览器不支持 audio 元素。
         </audio>
@@ -295,7 +294,8 @@ export default{
             currentLineNum:0,
             currentShow:0,//显示CD还是歌词，0：CD，1:歌词
             touch:{},
-            tips:'',//没有歌词的提示
+            songReady: false,//判断歌曲是否缓冲完成
+            tips:'暂无歌词',//没有歌词的提示
             isLyric:false
         }
     },
@@ -304,9 +304,7 @@ export default{
     methods:{
         //点击返回按钮隐藏全屏播放器
         clickReturn(){
-            this.$nextTick(function(){
-                this.SetFullScreen(false);
-            })
+            this.SetFullScreen(false);
             console.log("fullScreen:",this.fullScreen);
         },
         //点击mini播放器显示全屏播放器
@@ -337,17 +335,18 @@ export default{
             });
             animations.runAnimation(this.$refs.lyricImg,'move',done);
         },
-        afterEnter(el,done){
+        afterEnter(el){
             animations.unregisterAnimation('move');
             this.$refs.lyricImg.style.animation = '';
         },
         leave(el,done){
-            this.$refs.lyricImg.style.transition = 'all 0.4s';
-            const {x,y,scale} = this.getPosAndScale();
-            this.$refs.lyricImg.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale})`;
+            this.$refs.lyricImg.style.transition = 'all 0.4s'
+            const {x, y, scale} = this.getPosAndScale()
+            this.$refs.lyricImg.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale})`
             this.$refs.lyricImg.addEventListener('transitionend', done)
+            done();
         },
-        afterLeave(el,done){
+        afterLeave(el){
             this.$refs.lyricImg.style.transition = ''
             this.$refs.lyricImg.style[transform] = ''
         },
@@ -365,9 +364,6 @@ export default{
         // 更新歌曲播放的时间
         updataTime(e){
             this.currentTime = e.target.currentTime;
-            // if (this.currentTime>=this.totalTime) {
-            //     this.setCurrentIndex(this.currentIndex+2);
-            // }
         },
         // 获得歌曲的总时长
         getTotalTime(e){
@@ -375,10 +371,16 @@ export default{
         },
         //暂停播放按钮点击事件
         togglePlaying(){
+            if (!this.songReady) {
+                return
+            }
             this.setPlaying(!this.playing);
         },
         //上一首播放按钮点击事件
         playLast(){
+            if (!this.songReady) {
+                return
+            }
             if (this.playList.length === 1) {
                 this.loop()
                 return
@@ -389,9 +391,13 @@ export default{
                     this.togglePlaying()
                 }
             }
+            this.songReady = false;
         },
         //下一首播放按钮点击事件
         playNext(){
+            if (!this.songReady) {
+                return
+            }
             if (this.playList.length === 1) {
                 this.loop()
                 return
@@ -402,6 +408,7 @@ export default{
                     this.togglePlaying()
                 }
             } 
+            this.songReady = false;
         },
         loop() {
             this.$refs.audio.currentTime = 0
@@ -409,6 +416,20 @@ export default{
             this.setPlaying(true)
             if (this.currentLyric) {
             this.currentLyric.seek(0)
+            }
+        },
+        ready(){
+            this.songReady = true;
+            this.savePlayHisList(this.currentSong)
+        },
+        error(){
+            this.songReady = true;
+        },
+        playEnd(){
+            if (this.mode === playMode.loop) {
+                this.loop()
+            } else {
+                this.playNext()
             }
         },
         // 显示播放历史列表组件
@@ -474,10 +495,8 @@ export default{
         lyricHandler({lineNum,txt}){
             this.currentLineNum = lineNum;
             if (lineNum>5) {
-              let lineEl =  this.$refs.lyricLines[lineNum-5];
-              this.$nextTick(function(){
-                   this.$refs.lyricList.scrollToElement(lineEl,1000);
-              })
+                let lineEl =  this.$refs.lyricLines[lineNum-5];
+                this.$refs.lyricList.scrollToElement(lineEl,1000);
             }else{
                 this.$refs.lyricList.scrollTo(0,0,1000);
             }
@@ -545,7 +564,14 @@ export default{
         this.touch.initiated = false
         },
         percentChange(percent){
-            this.$refs.audio.currentTime = this.totalTime*percent;
+            let currentTime = this.totalTime*percent;
+            this.$refs.audio.currentTime = currentTime;
+            if (!this.playing) {
+                this.togglePlaying()
+            };
+            if (this.currentLyric) {
+                this.currentLyric.seek(currentTime * 1000)
+            }
         },
         ...mapMutations({
             SetFullScreen: 'SET_FULL_SCREEN',
@@ -574,15 +600,21 @@ export default{
         ])
     },
     watch:{
-        currentSong(newCurrentSong){
-            this.getLyric();//获得对应歌词
+        currentSong(newSong,oldSong){
+            if (!newSong.songid) {
+                return
+            }
+            if (newSong.songid === oldSong.songid) {
+             return
+            }
             if (this.currentLyric && this.isLyric) {
                 this.currentLyric.stop();
             }
-            this.$nextTick(()=>{
-                this.$refs.audio.play();
-            });
-            this.savePlayHisList(newCurrentSong);
+            clearTimeout(this.timer)
+            this.timer = setTimeout(() => {
+                this.$refs.audio.play()
+                this.getLyric()//获得对应歌词
+            }, 1000)
         },
         // 获取播放时间占总时间的百分比，传给progressbar组件
         currentTime(){

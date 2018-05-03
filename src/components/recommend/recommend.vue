@@ -61,13 +61,13 @@
             <div class="recommend-special">
                 <div class="recommend-title">今日推荐</div>
                 <ul>
-                    <li class="recommend-list" v-for="(item,index) in songList" :key="item.id" @click.stop="clickSong(item,index)">
+                    <li class="recommend-list" v-for="(item,index) in songList" :key="item.songid" @click.stop="clickSong(item,index)">
                         <div class="item-img">
-                            <img :src="item.imgurl" alt="专辑封面"  width="80%" height="80%">
+                            <img :src="item.img" alt="专辑封面"  width="80%" height="80%">
                         </div>
                         <div class="description-text">
-                            <p v-html="item.dissname"></p>
-                            <h4 v-html="item.creator.name" class="grayFont singername"></h4>
+                            <p v-html="item.songname"></p>
+                            <h4 v-html="item.singer" class="grayFont singername"></h4>
                         </div>
                     </li>
                 </ul>
@@ -77,12 +77,13 @@
 </div>
 </template>
 <script>
-    import {getHotRecommend,getRecommend} from "api/recommend";
+    // import {getHotRecommend,getRecommend} from "api/recommend";
+    import {getRecommend} from "api/recommend"
     import {ERR_OK} from 'api/config';
     import Scroll from 'base/scroll';
     import {Indicator } from 'mint-ui';
-    // import {getRecommend,getHotRecommend} from 'api/index'
-    import {createSong} from 'common/js/song'
+    import {getHotRecommend} from 'api/index'
+    import {createNewSong} from 'common/js/song'
     import {filterSinger} from 'common/js/song'
     import {mapActions} from 'vuex'
 
@@ -110,8 +111,10 @@ export default {
         },
         _getHotRecommend(){
             getHotRecommend().then(res => {
-               if (res.code ===  ERR_OK) {
-                 this.songList = res.data.list;
+                console.log(" this.songList", res);
+               if (res.data.code ===  ERR_OK) {
+                 this.songList = this.normalizeNewSong(res.data.list);
+                 console.log(" this.songList", this.songList);
                }
             });
         },
@@ -119,7 +122,7 @@ export default {
             let ret = [];
             list.forEach(element => {
                 if (element.songid){
-                    ret.push(createSong(element));
+                    ret.push(createNewSong(element));
                 }
             });
             return ret;

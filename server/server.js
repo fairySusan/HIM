@@ -18,30 +18,30 @@ var singerdetailList;//歌手详情页数据
 var lyric;//歌词数据
 
 // 异步读取
-fs.readFile('index/recommand.json', function (err, data) {
-  if (err) {
-      return console.error(err);
-  }
-  recommend =  data;
-});
+// fs.readFile('index/recommand.json', function (err, data) {
+//   if (err) {
+//       return console.error(err);
+//   }
+//   recommend =  data;
+// });
 fs.readFile('index/newsong.json', function (err, data) {
   if (err) {
       return console.error(err);
   }
   newsongList =  data;
 });
-fs.readFile('singer/singer.json', function (err, data) {
-  if (err) {
-      return console.error(err);
-  }
-  singerList =  data;
-});
-fs.readFile('singer/singerdetail.json', function (err, data) {
-  if (err) {
-      return console.error(err);
-  }
-  singerdetailList =  JSON.parse(data);
-});
+// fs.readFile('singer/singer.json', function (err, data) {
+//   if (err) {
+//       return console.error(err);
+//   }
+//   singerList =  data;
+// });
+// fs.readFile('singer/singerdetail.json', function (err, data) {
+//   if (err) {
+//       return console.error(err);
+//   }
+//   singerdetailList =  JSON.parse(data);
+// });
 fs.readFile('lyric/lyric.json', function (err, data) {
   if (err) {
       return console.error(err);
@@ -64,9 +64,9 @@ app.all('*', function (req, res, next) {
 // app.get('/getRecommend',function(req,res){
 //   res.send(recommend);
 // })
-// app.get('/getHotRecommend',function(req,res){
-//   res.send(newsongList);
-// })
+app.get('/getHotRecommend',function(req,res){
+  res.send(newsongList);
+})
 // app.get('/getSingerList',function(req,res){
 //   res.send(singerList);
 // })
