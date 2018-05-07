@@ -3,9 +3,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var fs = require("fs");
 var axios = require('axios')
-
 var apiRoutes = express.Router()
-
 // 创建 application/x-www-form-urlencoded 编码解析
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 app.use(express.static('public'));
