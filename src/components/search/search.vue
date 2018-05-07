@@ -52,7 +52,7 @@
 </style>
 <template>
   <div class="search">
-    <mt-search
+     <mt-search
       v-model="value"
       cancel-text="取消"
       placeholder="搜索歌曲、歌手"
@@ -102,7 +102,6 @@ export default {
       value:'',
       result:[],
       hotkey:[],
-      showTags:true,
       historyList:state.searchHistory
     }
   },
@@ -122,9 +121,6 @@ export default {
     },
     queryItem(name){
       this.value = name;
-      if (this.value !== '' && this.value !== null) {
-        this.showTags = false;
-      }
     },
     //保存搜索历史记录
     saveSearch(msg){
@@ -158,6 +154,11 @@ export default {
             }
         });
         return ret;
+    }
+  },
+  computed:{
+    showTags(){
+      return this.value == '' ? true : false;
     }
   }
 }

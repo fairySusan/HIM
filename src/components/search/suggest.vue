@@ -33,6 +33,7 @@
     }
 </style>
 <template>
+<!-- <scroll :data="result" :pullup="pullup"> -->
     <div class="suggest">
         <ul class="result-wrapper">
             <li class="result-list" v-for="(item,index) in result" :key="item.songid" @click="selectItem(item,index)">
@@ -46,6 +47,7 @@
             </li>
         </ul>
     </div>
+<!-- </scroll> -->
 </template>
 <script type="text/ecmascript-6">
 import {search} from 'api/search'
@@ -72,7 +74,8 @@ export default {
         return{
             page:1,
             result:[],
-            pullup:true
+            pullup:true,
+            value:""
         }
     },
     created(){

@@ -111,10 +111,8 @@ export default {
         },
         _getHotRecommend(){
             getHotRecommend().then(res => {
-                console.log(" this.songList", res);
                if (res.data.code ===  ERR_OK) {
                  this.songList = this.normalizeNewSong(res.data.list);
-                 console.log(" this.songList", this.songList);
                }
             });
         },

@@ -52,7 +52,8 @@ export function createSong(musicItem){
     albumname: musicItem.albumname,//专辑名
     duration: musicItem.interval,//歌曲时长
     img: `http://y.gtimg.cn/music/photo_new/T002R300x300M000${musicItem.albummid}.jpg?max_age=2592000`,
-    url:`http://thirdparty.gtimg.com/C100${musicItem.songmid}.m4a?fromtag=38`
+    url:`http://thirdparty.gtimg.com/C100${musicItem.songmid}.m4a?fromtag=38`,
+    // url:`http://cc.stream.qqmusic.qq.com/C100${musicItem.songmid}.m4a?fromtag=52`
   })
 }
 //一首歌有多个演唱者，连接演唱者的字符串

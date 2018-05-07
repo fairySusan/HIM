@@ -89,6 +89,12 @@
                             border:10px solid rgba(0,0,0,.4);
                         }
                     }
+                    .running{
+                        animation-play-state:running;
+                    }
+                    .paused{
+                        animation-play-state:paused;
+                    }
                 }
             }
            
@@ -152,6 +158,12 @@
                     border-radius: 50%;
                 }
             }
+            .running{
+                animation-play-state:running;
+            }
+            .paused{
+                animation-play-state:paused;
+            }
             .text{
                 position: absolute;
                 top:50%;
@@ -200,7 +212,7 @@
                 @touchmove.prevent="movetouch"
                 @touchend="movetouchend">
                     <div class="middle-l" ref="middleL">
-                        <div class="lyric-img" ref="lyricImg" :style="{animationPlayState:isRotate}">
+                        <div class="lyric-img" ref="lyricImg"  :class="isRotate">
                             <img :src="currentSong.img" alt="专辑封面" width="80%" height="80%">
                         </div>
                     </div>
@@ -238,7 +250,7 @@
             <div id="mini-player" v-show="!fullScreen" @click="clickMini">
                 <!-- 播放历史列表 -->
                 <played-list v-show="isDisplay" @close="closePlayHis()"></played-list>
-                <div class="minilyric-img fl"  :style="{animationPlayState:isRotate}">
+                <div class="minilyric-img fl" :class="isRotate">
                     <img :src="currentSong.img" alt="专辑封面" width="100%" height="100%">
                 </div>
                 <div class="text fl">
@@ -251,7 +263,7 @@
                 </div>
             </div>
         </transition>
-        <audio ref="audio" :src="currentSong.url" @play="ready" @error="error" @timeupdate="updataTime" @canplay="getTotalTime" @ended="playEnd">
+        <audio ref="audio" :src="currentSong.url" @play="ready" @error="error"  @timeupdate="updataTime" @canplay="getTotalTime" @ended="playEnd">
             <source :src="currentSong.url" type="audio/mpeg">
             您的浏览器不支持 audio 元素。
         </audio>
@@ -288,7 +300,7 @@ export default{
             isDisplay:false,//控制播放历史列表是否可见
             playModeClass:'order-icon',
             isLikeClass:'nolike-icon',
-            isRotate:'',//专辑封面是否旋转
+            isRotate:null,//专辑封面是否旋转
             currentLyric:{},//歌词
             currentLine:'',
             currentLineNum:0,
@@ -296,7 +308,7 @@ export default{
             touch:{},
             songReady: false,//判断歌曲是否缓冲完成
             tips:'暂无歌词',//没有歌词的提示
-            isLyric:false
+            isLyric:false//是否获得了歌词
         }
     },
     created(){
@@ -305,12 +317,10 @@ export default{
         //点击返回按钮隐藏全屏播放器
         clickReturn(){
             this.SetFullScreen(false);
-            console.log("fullScreen:",this.fullScreen);
         },
         //点击mini播放器显示全屏播放器
         clickMini(){
-             this.SetFullScreen(true);
-             console.log("2",this.fullScreen);
+            this.SetFullScreen(true);
         },
         enter(el,done){
             const {x,y,scale} = this.getPosAndScale();
@@ -414,7 +424,7 @@ export default{
             this.$refs.audio.currentTime = 0
             this.$refs.audio.play()
             this.setPlaying(true)
-            if (this.currentLyric) {
+            if (this.currentLyric && this.isLyric) {
             this.currentLyric.seek(0)
             }
         },
@@ -423,7 +433,13 @@ export default{
             this.savePlayHisList(this.currentSong)
         },
         error(){
-            this.songReady = true;
+            this.songReady = false;
+            this.isRotate = 'paused';
+            console.log("请求歌曲资源被拒绝")
+        },
+        /* 歌曲资源为空时 */
+        emptied(){
+            console.log("此歌曲无法播放");
         },
         playEnd(){
             if (this.mode === playMode.loop) {
@@ -485,11 +501,12 @@ export default{
         // 获得对应的歌词
         getLyric(){
             this.currentSong.getLyric().then(res=>{
-                    this.isLyric = true;
-                    this.currentLyric = new Lyric(res,this.lyricHandler);
-                    if(this.playing){
-                        this.currentLyric.play();
-                    }
+                this.isLyric = true;
+                console.log("异步成功");
+                this.currentLyric = new Lyric(res,this.lyricHandler);
+                if(this.playing){
+                    this.currentLyric.play();
+                }
             })
         },
         lyricHandler({lineNum,txt}){
@@ -569,7 +586,7 @@ export default{
             if (!this.playing) {
                 this.togglePlaying()
             };
-            if (this.currentLyric) {
+            if (this.currentLyric && this.Lyric) {
                 this.currentLyric.seek(currentTime * 1000)
             }
         },
@@ -597,7 +614,10 @@ export default{
             'currentIndex',
             'mode',
             'sequenceList'
-        ])
+        ]),
+        // isRotate(){
+        //     return this.playing ? 'running' : 'paused';
+        // }
     },
     watch:{
         currentSong(newSong,oldSong){
@@ -648,6 +668,7 @@ export default{
                 setTimeout(() => {
                     this.$refs.lyricList.refresh()
                 }, 20)
+                // this.isRotate = this.playing?'running':'paused';
             }
         }
     },

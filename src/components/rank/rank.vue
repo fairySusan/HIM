@@ -4,11 +4,9 @@
   position: fixed;
   top:2.5rem;
   bottom:0;
-  .scroll{
-    height:100%;
-    overflow: hidden;
-    .rank{
-      height: 100%;
+      .scroll{
+        height:100%;
+        overflow: hidden;
       .rank-ul{
         margin:0 10px 10px 10px;
         .rank-list{
@@ -50,31 +48,28 @@
           }
         }
       }
-    }
   }
 }   
 </style>
 <template>
 <div class="rank-wrap">
   <scroll  :data="rankSongList" class="scroll" :pullup="pullup">
-    <div class="rank" ref="rank">
-      <ul class="rank-ul">
-        <li class="rank-list"  v-for="listItem in rankSongList" :key="listItem.id" @click="clickRankItem(listItem)">
-          <div class="rank-img"><img :src="listItem.picUrl" alt="专辑图片" width="100%" height="100%"></div>
-          <div class="rank-item">
-            <h6 class="rank-title">{{listItem.topTitle}}</h6>
-            <ol class="song-rank">
-              <li class="song-item ellipsis" v-for="(song,index) in listItem.songList" :key="song.songname">
-                <span class="song-num">{{index+1}}</span>
-                  <span class="song-name">{{song.songname}}</span>
-                  <span class="singer-name"> - {{song.singername}}</span>
-              </li>
-            </ol>
-          </div>
-          <span class="go-icon"></span>
-        </li>
-      </ul>
-    </div>
+    <ul class="rank-ul">
+      <li class="rank-list"  v-for="listItem in rankSongList" :key="listItem.id" @click="clickRankItem(listItem)">
+        <div class="rank-img"><img :src="listItem.picUrl" alt="专辑图片" width="100%" height="100%"></div>
+        <div class="rank-item">
+          <h6 class="rank-title">{{listItem.topTitle}}</h6>
+          <ol class="song-rank">
+            <li class="song-item ellipsis" v-for="(song,index) in listItem.songList" :key="song.songname">
+              <span class="song-num">{{index+1}}</span>
+                <span class="song-name">{{song.songname}}</span>
+                <span class="singer-name"> - {{song.singername}}</span>
+            </li>
+          </ol>
+        </div>
+        <span class="go-icon"></span>
+      </li>
+    </ul>
   </scroll>
   <router-view></router-view>
 </div>
