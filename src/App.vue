@@ -11,7 +11,7 @@
         </router-link>
       </div>
       <router-link to="/login">
-        <i class="user-login user-icon"></i>
+        <i class="user-login user-icon sprite-icon"></i>
       </router-link>
     </div>
     <nav-bar></nav-bar>

@@ -15,7 +15,7 @@
 <transition name="slide">
  <div class="rank-detail">
     <music-list :songList="topSongList" :detailInfo="topInfo">
-        <span class="return-icon" @click="returnClick"></span>
+        <span class="return-icon sprite-icon" @click="returnClick"></span>
     </music-list>
  </div>
 </transition>

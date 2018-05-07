@@ -65,7 +65,7 @@
 <template>
   <div id="user-center" class="cover">
       <header>
-          <i class="return-btn return-icon" @click="goBack"></i>
+          <i class="return-btn return-icon sprite-icon" @click="goBack"></i>
           <div class="toggle-btn">
               <button :class="{'active':isShowPanel}" @click="showPanel(true)">最 近 听 的</button>
               <button :class="{'active':!isShowPanel}" @click="showPanel(false)">我 喜 欢 的</button>
@@ -78,7 +78,7 @@
               <li v-for="(item,index) in favoriteList" :key="item.songid" @click="clickSong(0,index)">
                   <h6 class="songname">{{item.songname}}</h6>
                   <span class="singer grayFont">{{item.singer}}-{{item.albumname}}</span>
-                  <i class="garbage-icon" @click.stop="deleteFavorite(item)"></i>
+                  <i class="garbage-icon sprite-icon" @click.stop="deleteFavorite(item)"></i>
               </li>
           </ul>
       </div>
@@ -89,7 +89,7 @@
               <li v-for="(item,index) in playHisList" :key="item.songid" @click="clickSong(1,index)">
                   <h6 class="songname">{{item.songname}}</h6>
                   <span class="singer grayFont">{{item.singer}}-{{item.albumname}}</span>
-                  <i class="garbage-icon" @click="deletePlayHis(item)"></i>
+                  <i class="garbage-icon sprite-icon" @click="deletePlayHis(item)"></i>
               </li>
           </ul>
       </div>

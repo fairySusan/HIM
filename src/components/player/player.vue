@@ -199,7 +199,7 @@
                 <img class="blurBack cover" :src="currentSong.img" alt="">
                 <div class="mask"></div>
                 <div class="des-title">
-                    <i class="arrow-icon slide-down" @click="clickReturn"></i>
+                    <i class="arrow-icon slide-down sprite-icon" @click="clickReturn"></i>
                     <div class="title-wrap"> 
                         <span class="song-name">{{currentSong.songname}}</span>
                         <h6 class="singer-name">{{currentSong.singer}}</h6>
@@ -235,11 +235,11 @@
                         <progress-bar :percent="percent" @percentChange="percentChange"></progress-bar>
                     </div>
                     <div class="tools-btns">
-                        <button :class="playModeClass" @click="selectMode"></button>
-                        <button class="last-icon" @click="playLast"></button>
-                        <button v-bind:class="playing ? 'stop-icon' : 'play-icon'" @click="togglePlaying"></button>
-                        <button class="next-icon" @click="playNext"></button>
-                        <button :class="getFavoriteIcon(currentSong)" @click="toggleFavoriteSong(currentSong)"></button>
+                        <button :class="playModeClass" class="sprite-icon" @click="selectMode"></button>
+                        <button class="last-icon sprite-icon" @click="playLast"></button>
+                        <button :class="playing ? 'stop-icon' : 'play-icon'" class="sprite-icon" @click="togglePlaying"></button>
+                        <button class="next-icon sprite-icon" @click="playNext"></button>
+                        <button :class="getFavoriteIcon(currentSong)" class="sprite-icon" @click="toggleFavoriteSong(currentSong)"></button>
                     </div>
                 </div>
             </div>
@@ -258,8 +258,8 @@
                 <span class="singer-name grayFont">{{currentSong.singer}}</span> 
                 </div>
                 <div class="icon-btn">
-                    <button :class="['state-btn',playing?'stop-mini':'play-mini']" @click.stop="togglePlaying"></button>
-                    <button class="list-btn playList-icon" @click.stop="showPlayHis()"></button>
+                    <button :class="['state-btn',playing?'stop-mini':'play-mini']" class="sprite-icon" @click.stop="togglePlaying"></button>
+                    <button class="list-btn playList-icon sprite-icon" @click.stop="showPlayHis()"></button>
                 </div>
             </div>
         </transition>
