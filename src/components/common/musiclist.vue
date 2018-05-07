@@ -1,9 +1,7 @@
 /* 歌曲详情页通用组件 */
 <style lang='less'>
 @import '../../assets/less/var.less';
-    .scroll{
-            height: 100%;
-            overflow:hidden;
+    
         .musiclist{
             .singer-des{
                 position:relative;
@@ -26,23 +24,25 @@
                     overflow:hidden;
                 }
             }
-            .songs-list{
-                margin:20px;
-                .song-item{
-                    background:#fff;
-                    padding:5px 0;
-                    border-bottom:1px solid @underlineColor;
-                    .des-text{
-                        font-size:12px;
+            .scroll{
+                height: 100%;
+                overflow:hidden;
+                .songs-list{
+                    margin:20px;
+                    .song-item{
+                        background:#fff;
+                        padding:5px 0;
+                        border-bottom:1px solid @underlineColor;
+                        .des-text{
+                            font-size:12px;
+                        }
                     }
+                
                 }
-            
             }
         }
-    }
 </style>
 <template>
-<scroll  :data="songList" class="scroll" :pullup="pullup">
 <div class="musiclist">
         <!-- 歌手简介 -->
         <div class="singer-des">
@@ -57,14 +57,17 @@
             <i class="play-icon"></i>
         </div>
         <!-- 歌曲目录 -->
+        <div style="position:fixed;top:9rem;bottom:0;">
+        <scroll  :data="songList" class="scroll" :pullup="pullup">
         <ul class="songs-list">
             <li class="song-item" v-for="(item,index) in songList" :key="item.songid" @click="clickSong(item,index)">
                 <h6 class="song-name">{{item.songname}}</h6>
                 <span class="des-text grayFont">{{item.singer}}-{{item.albumname}}</span>
             </li>
         </ul>
+        </scroll>
+        </div>
     </div>
-</scroll>
 </template>
 <script>
 import {mapActions} from 'vuex'

@@ -47,7 +47,7 @@
 </style>
 <template>
 <div class="recommend-wrap">
-    <scroll  :data="songList" class="scroll" :pullup="pullup">
+     <scroll  :data="songList" class="scroll" :pullup="pullup">
         <div class="recommend">
             <!-- 轮播图 -->
             <div class="slider">
