@@ -78,16 +78,13 @@ export default {
             value:""
         }
     },
-    created(){
-        // this.search();
-    },
     methods:{
         // 查询歌曲
         search(){
+            Indicator.open('加载中...');
             search(this.query,this.page,this.showSinger).then(res => {
-                // Indicator.open('加载中...');
                 if (res.code === ERR_OK) {
-                    // Indicator.close();
+                   Indicator.close();
                    this.result = this.getResult(res.data);
                 }
             })

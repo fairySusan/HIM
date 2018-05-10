@@ -49,7 +49,7 @@
 <template>
   <div id="login" class="cover">
     <header>
-      <router-link to="/recommend"> <i class="return-icon"></i></router-link>
+      <router-link to="/recommend"> <i class="return-icon sprite-icon"></i></router-link>
       账号
     </header>
     <div>

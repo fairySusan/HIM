@@ -50,12 +50,14 @@ export default {
     },
     methods:{
         _getSingerDetail(){
+            Indicator.open("加载中...");
             if (!this.singer.mid) {
                 this.$router.push('/singer');
                 return;
             }
             getSingerDetail(this.singer.mid).then(res =>{
                 if(res.code ===  ERR_OK){
+                    Indicator.close();
                     this.musicData = this.normalizeSongs(res.data.list);
                     this.singerImg = `https://y.gtimg.cn/music/photo_new/T001R300x300M000${res.data.singer_mid}.jpg?max_age=2592000`
                     this.singerInfo.imgUrl = this.singerImg;

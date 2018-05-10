@@ -381,16 +381,17 @@ export default{
         },
         //暂停播放按钮点击事件
         togglePlaying(){
-            if (!this.songReady) {
-                return
-            }
+            // if (!this.songReady) {
+            //     return
+            // }
             this.setPlaying(!this.playing);
         },
         //上一首播放按钮点击事件
         playLast(){
-            if (!this.songReady) {
-                return
-            }
+            // if (!this.songReady) {
+            //     return
+            // }
+             this.isRotate = 'running';
             if (this.playList.length === 1) {
                 this.loop()
                 return
@@ -401,13 +402,14 @@ export default{
                     this.togglePlaying()
                 }
             }
-            this.songReady = false;
+            // this.songReady = false;
         },
         //下一首播放按钮点击事件
         playNext(){
-            if (!this.songReady) {
-                return
-            }
+            // if (!this.songReady) {
+            //     return
+            // }
+            this.isRotate = 'running';
             if (this.playList.length === 1) {
                 this.loop()
                 return
@@ -418,7 +420,7 @@ export default{
                     this.togglePlaying()
                 }
             } 
-            this.songReady = false;
+            // this.songReady = false;
         },
         loop() {
             this.$refs.audio.currentTime = 0
@@ -429,11 +431,11 @@ export default{
             }
         },
         ready(){
-            this.songReady = true;
+            // this.songReady = true;
             this.savePlayHisList(this.currentSong)
         },
         error(){
-            this.songReady = false;
+            // this.songReady = false;
             this.isRotate = 'paused';
             console.log("请求歌曲资源被拒绝")
         },
@@ -586,7 +588,7 @@ export default{
             if (!this.playing) {
                 this.togglePlaying()
             };
-            if (this.currentLyric && this.Lyric) {
+            if (this.currentLyric && this.isLyric) {
                 this.currentLyric.seek(currentTime * 1000)
             }
         },
@@ -614,10 +616,7 @@ export default{
             'currentIndex',
             'mode',
             'sequenceList'
-        ]),
-        // isRotate(){
-        //     return this.playing ? 'running' : 'paused';
-        // }
+        ])
     },
     watch:{
         currentSong(newSong,oldSong){

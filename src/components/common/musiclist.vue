@@ -47,12 +47,11 @@
         <!-- 歌手简介 -->
         <div class="singer-des">
             <h6 class="singer-name">
-                <!-- <span class="return-btn" @click="returnClick">&lt</span> -->
                 <slot></slot>
                 {{detailInfo.title}}
             </h6>
             <div class="singer-img">
-                <img :src="detailInfo.imgUrl" alt="歌手图片" width="100%">
+                <img :src="detailInfo.imgUrl" alt="" width="100%">
             </div>
             <i class="play-icon"></i>
         </div>
@@ -72,6 +71,7 @@
 <script>
 import {mapActions} from 'vuex'
 import Scroll from 'base/scroll';
+import { Indicator } from 'mint-ui';
 export default{
     components:{Scroll},
     props:["songList","detailInfo"],
@@ -79,9 +79,6 @@ export default{
         return{
             pullup:true
         }
-    },
-    created(){
-
     },
     methods:{
         // 点击歌曲事件

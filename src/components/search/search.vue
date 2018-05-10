@@ -75,7 +75,7 @@
           <h6 class="his-Title grayFont fl">搜索历史</h6>
           <h6 class="clearHis grayFont fr" @click="clearAllHistory()">清除历史</h6>
           <ul class="clearfix">
-            <li class="history-list" @click="clickSong(item,index)"  v-if="historyList.length>0" v-for="(item,index) in historyList" :key="item.songid">
+            <li class="history-list" @click="clickSong(item,index)"  v-if="searchHistory.length>0" v-for="(item,index) in searchHistory" :key="item.songid">
               <div class="text">
                   <span class="song-name">{{item.songname}}</span>
                   <i class="cancel-tag fr grayFont" @click="clearSingleHis(item)">x</i>
@@ -90,8 +90,8 @@
 import {getHotKey} from 'api/search'
 import {ERR_OK} from 'api/config'
 import Suggest from './suggest'
-import {mapActions} from 'vuex'
-import state from '../../store/state'
+import {mapActions,mapGetters,mapMutations} from 'vuex'
+import {createSong} from 'common/js/song'
 import { Indicator } from 'mint-ui';
 export default {
   components:{
@@ -101,8 +101,7 @@ export default {
     return{
       value:'',
       result:[],
-      hotkey:[],
-      historyList:state.searchHistory
+      hotkey:[]
     }
   },
   created(){
@@ -128,21 +127,23 @@ export default {
     },
     ...mapActions([
       'saveSearchHistory',
-      'clearSearchHistory'
+      'clearSearchHistory',
+      "selectPlay"
     ]),
+    ...mapMutations({
+          setSearchHistory: 'SET_SEARCH_HISTORY'
+      }),
     //清除全部历史记录
     clearAllHistory(){
       this.clearSearchHistory(1);
-      this.historyList = state.searchHistory;
     },
     //清除单个历史记录
     clearSingleHis(item){
       this.clearSearchHistory(item);
-      this.historyList = state.searchHistory;
     },
     clickSong(item,index){
       this.selectPlay({
-          list:this.normalizeSongs(this.historyList),
+          list:this.normalizeSongs(this.searchHistory),
           index:index
       })
     },
@@ -157,6 +158,9 @@ export default {
     }
   },
   computed:{
+    ...mapGetters([
+        'searchHistory'
+    ]),
     showTags(){
       return this.value == '' ? true : false;
     }

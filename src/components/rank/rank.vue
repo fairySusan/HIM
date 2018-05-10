@@ -94,10 +94,10 @@ export default {
   },
   methods:{
     _getRankList(){
+      Indicator.open('加载中...');
       getRankList().then(res => {
-        // Indicator.open('加载中...');
-        // Indicator.close();
          if(res.code ===  0){
+            Indicator.close();
             this.rankSongList = res.data.topList;
          }
       })

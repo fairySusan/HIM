@@ -68,6 +68,6 @@ export function filterSinger(singer) {
       })
       return ret.join('/')
     }else{
-      return
+      return singer
     }
   }

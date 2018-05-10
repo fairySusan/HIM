@@ -58,6 +58,7 @@
 </template>
 <script>
 import { mapGetters,mapActions } from "vuex";
+import {createSong} from 'common/js/song'
 export default {
     data(){
         return{
@@ -95,7 +96,8 @@ export default {
             return ret;
         },
         ...mapActions([
-            'deletePlayHisList'
+            'deletePlayHisList',
+            "selectPlay"
         ])
     },
     computed:{
