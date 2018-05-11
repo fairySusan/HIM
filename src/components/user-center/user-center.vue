@@ -89,7 +89,7 @@
               <li v-for="(item,index) in playHisList" :key="item.songid" @click="clickSong(1,index)">
                   <h6 class="songname">{{item.songname}}</h6>
                   <span class="singer grayFont">{{item.singer}}-{{item.albumname}}</span>
-                  <i class="garbage-icon sprite-icon" @click="deletePlayHis(item)"></i>
+                  <i class="garbage-icon sprite-icon" @click.stop="deletePlayHis(item)"></i>
               </li>
           </ul>
       </div>

@@ -78,7 +78,7 @@
             <li class="history-list" @click="clickSong(item,index)"  v-if="searchHistory.length>0" v-for="(item,index) in searchHistory" :key="item.songid">
               <div class="text">
                   <span class="song-name">{{item.songname}}</span>
-                  <i class="cancel-tag fr grayFont" @click="clearSingleHis(item)">x</i>
+                  <i class="cancel-tag fr grayFont" @click.stop="clearSingleHis(item)">x</i>
               </div>
             </li>
         </ul>
