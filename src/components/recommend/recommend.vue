@@ -2,6 +2,7 @@
 @import '../../assets/less/var.less';
 .recommend-wrap{
     position: fixed;
+    width: 100%;
     top:2.5rem;
     bottom:0;
     .scroll{
